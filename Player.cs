@@ -1,6 +1,10 @@
-﻿using System.Windows.Controls;
+﻿using System;
+using System.Windows.Controls;
 using System.Windows.Media;
+using System.Windows.Media.Animation;
+using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
+using WpfAnimatedGif;
 
 namespace Floppy_Plane_WPF
 {
@@ -12,18 +16,38 @@ namespace Floppy_Plane_WPF
         public int X { get; private set; }
         public int Y { get; private set; }
         public int Speed { get; private set; }
+        public bool HitFloor { get; private set; }
 
         public Player(Canvas canvas)
         {
             frame = canvas;
+
+            VisualBrush visualBrush = new();
+
+            // TODO: Try to animate player
+            Image image = new()
+            {
+                Source = new BitmapImage(new Uri("C:\\Users\\robin\\Desktop\\Projects\\Floppy Plane WPF\\Resources\\player.gif", UriKind.Absolute))
+            };
+
+
+            visualBrush.Visual = image;
+
             Rectangle sprite = new()
             {
                 Name = "Player",
-                Height = 55,
-                Width = 100,
-                Fill = Brushes.DarkViolet,
-                Stroke = Brushes.LightSteelBlue,
+                Height = 0,
+                Width = 125,
+                Fill = visualBrush,
             };
+
+
+            image.Loaded += (sender, e) =>
+            {
+                double ratio = image.ActualHeight / image.ActualWidth;
+                sprite.Height = sprite.Width * ratio;
+            };
+
             Sprite = sprite;
             X = 20;
             Y = 150;
@@ -45,6 +69,7 @@ namespace Floppy_Plane_WPF
             }
             else
             {
+                HitFloor = true;
                 Y = (int)((frame.ActualHeight - 25) - Sprite.Height);
             }
         }
@@ -56,6 +81,12 @@ namespace Floppy_Plane_WPF
                 if (Speed >= 0) Speed = -10;
                 else Speed = -15;
             }
+        }
+
+        public void SetToStartingPosition()
+        {
+            Y = 150;
+            HitFloor = false;
         }
     }
 }

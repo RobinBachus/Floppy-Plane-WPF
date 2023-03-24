@@ -15,13 +15,11 @@ namespace Floppy_Plane_WPF
         private Player Player { get; set; }
         private List<Enemy> Enemies { get; set; }
         private AnimationController AnimationController { get; set; }
-        private bool Started { get; set; }
 
         public MainWindow()
         {
             InitializeComponent();
 
-            Started = false; 
             Enemies = new List<Enemy>();
             Frame.Loaded += Canvas_OnLoad;
         }
@@ -30,9 +28,8 @@ namespace Floppy_Plane_WPF
         {
             if (e.Key == Key.Space)
             {
-                if (!Started)
+                if (!AnimationController.Started)
                 {
-                    Started = true;
                     AnimationController.StartPlayerAnimation();
                 }
                 Player.Jump();
@@ -42,9 +39,9 @@ namespace Floppy_Plane_WPF
         private void Canvas_OnLoad(object sender, RoutedEventArgs routedEvent)
         {
             Frame.Focus();
-            Frame.Background = Brushes.LightBlue;
             Player = new(Frame);
-            AnimationController = new(Player, Frame, Enemies);
+            
+            AnimationController = new(Player, Frame, GameUI, GameOverScreen, Enemies);
         }
     }
 }

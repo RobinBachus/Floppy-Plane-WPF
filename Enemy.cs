@@ -1,5 +1,4 @@
-﻿using System;
-using System.Windows.Controls;
+﻿using System.Windows.Controls;
 using System.Windows.Media;
 using System.Windows.Shapes;
 
@@ -12,14 +11,14 @@ namespace Floppy_Plane_WPF
 
         public int X { get; private set; }
         public int Y { get; private set; }
+        public int Level { get; private set; }
 
-        public const int BaseSpeed = 1;
+        public const int BaseSpeed = 10;
         public const int BaseHeight = 40;
         public const int BaseWidth = 70;
 
-        public Enemy(Canvas canvas, int id, int yPosition)
+        public Enemy(Canvas canvas, int id, int yPosition, int level)
         {
-
             frame = canvas;
             Sprite = new()
             {
@@ -33,6 +32,8 @@ namespace Floppy_Plane_WPF
             X = (int)(frame.ActualWidth);
             Y = yPosition;
 
+            Level = level;
+
             frame.Children.Add(Sprite);
             Canvas.SetLeft(Sprite, X);
             Canvas.SetTop(Sprite, Y);
@@ -40,7 +41,7 @@ namespace Floppy_Plane_WPF
 
         public void Move()
         {
-            Canvas.SetLeft(Sprite, X -= 10);
+            Canvas.SetLeft(Sprite, X -= BaseSpeed + (Level*3));
         }
     }
 }

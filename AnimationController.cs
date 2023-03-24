@@ -9,25 +9,47 @@ namespace Floppy_Plane_WPF
 {
     internal class AnimationController
     {
-        private Player Player { get; set; }
-        private List<Enemy> Enemies { get; set; }
+        private Player Player { get; }
+        private List<Enemy> Enemies { get; }
         private int EnemyCount { get; set; }
-        private Canvas Frame { get; set; }
-        private readonly Random Random = new();
+        private Canvas Frame { get; }
+        private Grid UI { get; }
+        private Grid GameOverScreen { get; }
+        private Random Random { get; }
 
+        public bool Started { get; set; }
+        public int Level { get; set; }
 
-        // Timer for the animations
+        /// <summary>
+        /// Timer for the animations
+        /// </summary>
         private DispatcherTimer FrameUpdateTimer { get; }
-        // Timer for spawning enemies
+        /// <summary>
+        /// Timer for spawning enemies
+        /// </summary>
         private DispatcherTimer EnemySpawnTimer { get; }
-        // Timer for spawning enemies
+        /// <summary>
+        /// Timer for checking collisions
+        /// </summary>
         private DispatcherTimer CollisionTimer { get; }
+        /// <summary>
+        /// Timer for increasing the level
+        /// </summary>
+        private DispatcherTimer LevelTimer { get; }
 
-        public AnimationController(Player player, Canvas canvas, List<Enemy> enemies)
+        public AnimationController(Player player, Canvas canvas, Grid GameUI,  Grid gameOverScreen , List<Enemy> enemies)
         {
             Player = player;
             Frame = canvas;
+            UI = GameUI;
+            GameOverScreen = gameOverScreen;
             Enemies = enemies;
+
+            Random = new Random();
+
+            Started = false;
+
+            Level = 1;
 
             FrameUpdateTimer = new()
             {
@@ -39,19 +61,35 @@ namespace Floppy_Plane_WPF
             };
             CollisionTimer = new()
             {
-                Interval = TimeSpan.FromMilliseconds(20)
+                Interval = TimeSpan.FromMilliseconds(5)
+            };
+            LevelTimer = new()
+            {
+                Interval = TimeSpan.FromSeconds(5)
             };
 
-            FrameUpdateTimer.Start();
-            EnemySpawnTimer.Start();
-            CollisionTimer.Start();
+            FrameUpdateTimer.Tick += Timer_PlayerMove;
+            EnemySpawnTimer.Tick += (sender, args) => Task.Run(() => Timer_AttemptSpawnEnemy(sender, args));
+            CollisionTimer.Tick += (sender, args) => Task.Run(() => Timer_CheckCollision(sender, args));
+            LevelTimer.Tick += (sender, args) => Task.Run(() => Timer_Levelup(sender, args));
         }
 
         public void StartPlayerAnimation()
         {
-            FrameUpdateTimer.Tick += Timer_PlayerMove;
-            EnemySpawnTimer.Tick += (sender, args) => Task.Run(() => Timer_AttemptSpawnEnemy(sender, args));
-            CollisionTimer.Tick += (sender, args) => Task.Run(() => Timer_CheckCollision(sender, args));
+            if (!Frame.Children.Contains(Player.Sprite))
+            {
+                Player.SetToStartingPosition();
+                Frame.Children.Add(Player.Sprite);
+                setLevel(1);
+            }
+
+            Started = true;
+            FrameUpdateTimer.Start();
+            EnemySpawnTimer.Start();
+            CollisionTimer.Start();
+            LevelTimer.Start();
+
+            GameOverScreen.Visibility = Visibility.Hidden;
         }
 
         void Timer_PlayerMove(object? sender, EventArgs e)
@@ -81,7 +119,7 @@ namespace Floppy_Plane_WPF
                 {
                     Application.Current.Dispatcher.Invoke(() =>
                     {
-                        Enemies.Add(new(Frame, ++EnemyCount, yPos));
+                        Enemies.Add(new(Frame, ++EnemyCount, yPos, Level));
                     });
                 }
             }
@@ -89,6 +127,34 @@ namespace Floppy_Plane_WPF
 
         private void Timer_CheckCollision(object? sender, EventArgs e)
         {
+            // Check if player has lost
+            if (EnemyHit() || Player.HitFloor)
+            {
+                // Stop timers
+                FrameUpdateTimer.Stop();
+                EnemySpawnTimer.Stop();
+                CollisionTimer.Stop();
+                LevelTimer.Stop();
+
+                Started = false;
+
+                Application.Current.Dispatcher.Invoke(() =>
+                {
+                    // Clear items on screen
+                    Enemies.Clear();
+                    Frame.Children.Clear();
+                    // Show Game Over screen
+                    GameOverScreen.Visibility = Visibility.Visible;
+                });
+            }
+        }
+
+        private void Timer_Levelup(object? sender, EventArgs e)
+        {
+            Application.Current.Dispatcher.Invoke(() =>
+            {
+                setLevel(++Level);
+            });
 
         }
 
@@ -101,10 +167,28 @@ namespace Floppy_Plane_WPF
                 double xDistance = Frame.ActualWidth - toTest.X;
                 double yDistance = yPosition - toTest.Y;
                 double distance = Math.Sqrt(Math.Pow(xDistance, 2) + Math.Pow(yDistance, 2));
-                if (distance < 400) return false;
+                if (distance < 300) return false;
             }
 
             return true;
+        }
+
+        private bool EnemyHit()
+        {
+            Rect player = new(Player.X, Player.Y, Player.Sprite.ActualWidth, Player.Sprite.ActualHeight);
+            foreach (Enemy enemy in Enemies)
+            {
+                Rect en = new(enemy.X, enemy.Y, enemy.Sprite.ActualWidth, enemy.Sprite.ActualHeight);
+                if (player.IntersectsWith(en)) return true;
+            }
+            return false;
+        }
+
+        private void setLevel(int level)
+        {
+            Level = level;
+            UIElement _label = UI.Children[1];
+            if (_label is Label label && label.Name == "LevelIndicator") label.Content = $"{level}";
         }
     }
 }
