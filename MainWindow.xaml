@@ -5,20 +5,48 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:main="clr-namespace:Floppy_Plane_WPF"
         mc:Ignorable="d"
-        Title="MainWindow" Height="600" Width="800">
+        Title="MainWindow" Height="600" Width="800"
+        Background="#FFB0ECFB">
     <Grid>
-        <Grid x:Name="Menu">
+        <Grid x:Name="Menu" Panel.ZIndex="999" Visibility="Visible">
+            <Label x:Name="SettingsButton" Content="⚙️" Margin="714,10,0,0" VerticalAlignment="Top" Background="{x:Null}" FontSize="48" BorderBrush="{x:Null}" Foreground="#FF000296" HorizontalAlignment="Left" FontFamily="Cascadia Code"/>
+            <Label x:Name="Title" Content="FLOPPY  PLANE" Margin="44,28,0,0" VerticalAlignment="Top" Background="{x:Null}" FontSize="56" BorderBrush="{x:Null}" Foreground="#FF000296" HorizontalAlignment="Left" FontFamily="Papyrus" FontWeight="Bold"/>
 
         </Grid>
-        <Grid x:Name="GameUI" Panel.ZIndex="10">
+        <Grid x:Name="Settings" Panel.ZIndex="999" Visibility="Collapsed">
+            <Label Content="SETTINGS" FontSize="48" FontFamily="Bahnschrift SemiBold" Foreground="#FF0500A7" Background="Transparent" HorizontalAlignment="Left" Canvas.Left="587" Canvas.Top="10" VerticalAlignment="Top" Margin="70,10,0,0" Height="69" Width="226"/>
+            <Label x:Name="SettingsReturnButton" Content="RETURN" FontFamily="Bahnschrift SemiBold" HorizontalAlignment="Left" Margin="618,26,0,0" VerticalAlignment="Top" Background="{x:Null}" Foreground="#FF0500A7" FontSize="36"/>
+
+            <Slider x:Name="LevelTimeSlider" HorizontalAlignment="Left" Margin="188,125,0,0" VerticalAlignment="Top" Width="175" Background="#33001BFF" Value="5" Maximum="30" Minimum="1" AutoToolTipPlacement="BottomRight" SmallChange="1"/>
+            <Label Content="Level time" FontSize="20" FontFamily="Bahnschrift SemiBold" Foreground="#FF0500A7" Background="Transparent" Margin="70,117,0,0" ToolTip="The time it takes to go to the next level in seconds." HorizontalAlignment="Left" VerticalAlignment="Top" AutomationProperties.HelpText="Help Text"/>
+            <Label x:Name="LevelTimeValue" Content="5 sec" FontSize="20" FontFamily="Bahnschrift SemiBold" Foreground="#FF0500A7" Background="Transparent" Margin="368,117,0,0" ToolTip="" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+
+            <Slider x:Name="SpeedSlider" HorizontalAlignment="Left" Margin="188,164,0,0" VerticalAlignment="Top" Width="175" Background="#33001BFF" Value="3" Maximum="15" Minimum="1" AutoToolTipPlacement="BottomRight" SmallChange="1"/>
+            <Label Content="Speed increase" FontSize="20" FontFamily="Bahnschrift SemiBold" Foreground="#FF0500A7" Background="Transparent" Margin="32,156,0,0" ToolTip="The speed of the missiles is calculated by multiplying this value to the current level. " HorizontalAlignment="Left" VerticalAlignment="Top"/>
+            <Label x:Name="SpeedValue" Content="3x" FontSize="20" FontFamily="Bahnschrift SemiBold" Foreground="#FF0500A7" Background="Transparent" Margin="368,156,0,0" ToolTip="" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+             
+            <CheckBox x:Name="ShowHitbox" Content="" HorizontalAlignment="Left" Margin="198,204,0,0" VerticalAlignment="Top" RenderTransformOrigin="0.5,0.5" Click="ShowHitbox_Click">
+                <CheckBox.RenderTransform>
+                    <TransformGroup>
+                        <ScaleTransform ScaleX="2" ScaleY="2"/>
+                        <SkewTransform/>
+                        <RotateTransform/>
+                        <TranslateTransform/>
+                    </TransformGroup>
+                </CheckBox.RenderTransform>
+            </CheckBox>
+            <Label Content="Show Hitboxes" FontSize="20" FontFamily="Bahnschrift SemiBold" Foreground="#FF0500A7" Background="Transparent" Margin="37,196,0,0" ToolTip="The speed of the missiles is calculated by multiplying this value to the current level. " HorizontalAlignment="Left" VerticalAlignment="Top"/>
+        </Grid>
+
+        <Grid x:Name="GameUI" Panel.ZIndex="10" Visibility="Collapsed">
             <Label Content="LEVEL: " Canvas.Left="582" Canvas.Top="10" FontSize="36" FontFamily="Quicksand Medium" Foreground="#FF1300FF" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="587,10,0,0" Background="Transparent"/>
             <Label x:Name="LevelIndicator" Content="1" Canvas.Left="736" Canvas.Top="8" FontSize="39" FontFamily="Quicksand Medium" Foreground="#FF8D00FF" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="720,6,0,0"/>
         </Grid>
-        <Canvas x:Name="Frame" Focusable="True" KeyDown="Canvas_KeyDown" Panel.ZIndex="0" Background="#FFB0ECFB">
 
-        </Canvas>
-        <Grid x:Name="GameOverScreen" Visibility="Hidden">
-            <Label x:Name="GameOverText" Content="Game Over!" Canvas.Left="81" Canvas.Top="122" FontSize="120" RenderTransformOrigin="0.5,0.5" Foreground="#FF023AE6" Margin="79,121,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" >
+        <Canvas x:Name="Frame" Focusable="True" KeyDown="Canvas_KeyDown" Panel.ZIndex="0"/>
+
+        <Grid x:Name="GameOverScreen" Visibility="Collapsed" Panel.ZIndex="10">
+            <Label x:Name="GameOverText" HorizontalAlignment="Center" Content="Game Over" Canvas.Left="81" Canvas.Top="122" FontSize="120" RenderTransformOrigin="0.5,0.5" Foreground="#FF023AE6" Margin="0,52,0,0" VerticalAlignment="Top" >
                 <Label.Effect>
                     <DropShadowEffect/>
                 </Label.Effect>
@@ -31,6 +59,8 @@
                     </TransformGroup>
                 </Label.RenderTransform>
             </Label>
+            <Label Content="Press space to restart!"  HorizontalAlignment="Center" Margin="0,274,0,0" VerticalAlignment="Top" BorderBrush="{x:Null}" Foreground="#FFFF7500" FontSize="56" FontFamily="Cooper Black" FontWeight="Bold"/>
+            <Button x:Name="GameOverMenuButton" Content="&lt;- MENU" HorizontalAlignment="Center" Margin="0,472,0,0" VerticalAlignment="Top" Background="{x:Null}" IsCancel="True" FontSize="36" BorderBrush="{x:Null}" Foreground="#FF023AE6" Click="GameOverMenuButton_Click" IsEnabled="true" FontFamily="Cascadia Mono SemiBold"/>
         </Grid>
     </Grid>
 </Window>

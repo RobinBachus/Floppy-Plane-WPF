@@ -19,6 +19,9 @@ namespace Floppy_Plane_WPF
 
         public bool Started { get; set; }
         public int Level { get; set; }
+        public int SpeedIncreaseValue { get; set; }
+        public bool ShowHitBoxes { get; set; }
+        public bool CanRespawn { get; private set; }
 
         /// <summary>
         /// Timer for the animations
@@ -32,6 +35,10 @@ namespace Floppy_Plane_WPF
         /// Timer for increasing the level
         /// </summary>
         private DispatcherTimer LevelTimer { get; }
+        /// <summary> 
+        /// Allows for a short period of time between dying and being able to restart to avoid accidental restarts after dying
+        /// </summary> */
+        private DispatcherTimer DeathDelayTimer { get; }
 
         public AnimationController(Player player, Canvas canvas, Grid GameUI,  Grid gameOverScreen , List<Enemy> enemies)
         {
@@ -42,10 +49,11 @@ namespace Floppy_Plane_WPF
             Enemies = enemies;
 
             Random = new Random();
-
             Started = false;
-
             Level = 1;
+            SpeedIncreaseValue = 3;
+            ShowHitBoxes = false;
+            CanRespawn = true;
 
             FrameUpdateTimer = new()
             {
@@ -59,11 +67,16 @@ namespace Floppy_Plane_WPF
             {
                 Interval = TimeSpan.FromSeconds(5)
             };
+            DeathDelayTimer = new()
+            {
+                Interval= TimeSpan.FromSeconds(.5)
+            };
 
             FrameUpdateTimer.Tick += Timer_PlayerMove;
             EnemyTimer.Tick += (sender, args) => Task.Run(() => Timer_AttemptSpawnEnemy(sender, args));
             EnemyTimer.Tick += (sender, args) => Task.Run(() => Timer_CheckCollision(sender, args));
             LevelTimer.Tick += (sender, args) => Task.Run(() => Timer_Levelup(sender, args));
+            DeathDelayTimer.Tick += Timer_DeathDelay;
         }
 
         public void StartPlayerAnimation()
@@ -71,7 +84,6 @@ namespace Floppy_Plane_WPF
             if (!Frame.Children.Contains(Player.Sprite))
             {
                 Player.SetToStartingPosition();
-                Frame.Children.Add(Player.Sprite);
                 SetLevel(1);
             }
 
@@ -110,7 +122,7 @@ namespace Floppy_Plane_WPF
                 {
                     Application.Current.Dispatcher.Invoke(() =>
                     {
-                        Enemies.Add(new(Frame, ++EnemyCount, yPos, Level));
+                        Enemies.Add(new(Frame, ++EnemyCount, yPos, Level, SpeedIncreaseValue, ShowHitBoxes));
                     });
                 }
             }
@@ -125,6 +137,9 @@ namespace Floppy_Plane_WPF
                 FrameUpdateTimer.Stop();
                 EnemyTimer.Stop();
                 LevelTimer.Stop();
+
+                DeathDelayTimer.Start();
+                CanRespawn = false;
 
                 Started = false;
 
@@ -146,6 +161,12 @@ namespace Floppy_Plane_WPF
                 SetLevel(++Level);
             });
 
+        }
+
+        private void Timer_DeathDelay(object? sender, EventArgs e)
+        {
+            DeathDelayTimer.Stop();
+            CanRespawn = true;
         }
 
         private bool IsSafeDistace(int yPosition)
@@ -179,6 +200,11 @@ namespace Floppy_Plane_WPF
             Level = level;
             UIElement _label = UI.Children[1];
             if (_label is Label label && label.Name == "LevelIndicator") label.Content = $"{level}";
+        }
+
+        public void SetLevelUpTime(int time)
+        {
+            LevelTimer.Interval = TimeSpan.FromSeconds(time);
         }
     }
 }

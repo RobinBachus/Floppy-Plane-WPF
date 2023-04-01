@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Reflection.Metadata;
 using System.Windows.Controls;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
@@ -8,17 +9,20 @@ namespace Floppy_Plane_WPF
 {
     public class Player
     {
-        private readonly Canvas frame;
-        public Rectangle Sprite { get; private set; }
+        private Canvas Frame { get; }
 
+        public Rectangle Sprite { get; private set; }
         public int X { get; private set; }
         public int Y { get; private set; }
         public int Speed { get; private set; }
         public bool HitFloor { get; private set; }
+        public bool ShowHitboxes { get; set; }
 
+        private const int START_POSITION = 200;
+ 
         public Player(Canvas canvas)
         {
-            frame = canvas;
+            Frame = canvas;
 
             VisualBrush visualBrush = new();
 
@@ -31,7 +35,6 @@ namespace Floppy_Plane_WPF
                 Source = new BitmapImage(new Uri(path, UriKind.RelativeOrAbsolute))
             };
 
-
             visualBrush.Visual = image;
 
             Sprite = new()
@@ -42,8 +45,10 @@ namespace Floppy_Plane_WPF
                 Fill = visualBrush,
             };
 
+            ShowHitboxes = false;
+
             X = 20;
-            Y = 150;
+            Y = START_POSITION;
 
             Speed = 1;
 
@@ -53,23 +58,31 @@ namespace Floppy_Plane_WPF
                 Sprite.Height = Sprite.Width * ratio;
             };
 
-            canvas.Children.Add(Sprite);
+            Draw();
+        }
+
+        public void Draw()
+        {
+            if (!Frame.Children.Contains(Sprite)) Frame.Children.Add(Sprite);
             Canvas.SetLeft(Sprite, X);
             Canvas.SetTop(Sprite, Y);
+            if (ShowHitboxes) Sprite.Stroke = Brushes.Green;
+            else Sprite.Stroke = null;
         }
 
         public void MovePlayer()
         {
-            if (Y+Sprite.Height < frame.ActualHeight - 25) 
+            if (Y+Sprite.Height < Frame.ActualHeight - 25) 
             {
                 Y += Speed;
-                Canvas.SetTop(Sprite, Y);
+                Draw();
                 if (Speed < 15) Speed++;
+
+                Sprite.RenderTransform = new RotateTransform(Speed * .5);
             }
             else
             {
                 HitFloor = true;
-                Y = (int)((frame.ActualHeight - 25) - Sprite.Height);
             }
         }
 
@@ -84,8 +97,10 @@ namespace Floppy_Plane_WPF
 
         public void SetToStartingPosition()
         {
-            Y = 150;
+            Y = START_POSITION;
             HitFloor = false;
+            Sprite.RenderTransform = new RotateTransform(0);
+            Draw();
         }
     }
 }

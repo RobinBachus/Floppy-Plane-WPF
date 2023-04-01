@@ -8,7 +8,7 @@ namespace Floppy_Plane_WPF
 {
     internal class Enemy
     {
-        private readonly Canvas frame;
+        private Canvas Frame { get; }
         public Rectangle Sprite { get; private set; }
 
         public int X { get; private set; }
@@ -19,12 +19,15 @@ namespace Floppy_Plane_WPF
         public const int BaseHeight = 40;
         public const int BaseWidth = 70;
 
-        public Enemy(Canvas canvas, int id, int yPosition, int level)
+        /** <summary> Value that the level is multiplied with to get the speed of the enemy </summary> */
+        private int SpeedIncreaseValue { get; }
+
+        public Enemy(Canvas canvas, int id, int yPosition, int level, int speedIncreaseValue, bool showHitbox)
         {
             VisualBrush visualBrush = new();
 
             // TODO: Get relative paths working for all pc's
-            string path = "Resources\\missile2.png";
+            string path = "Resources\\missile.png";
 
             Image image = new()
             {
@@ -33,7 +36,7 @@ namespace Floppy_Plane_WPF
 
             visualBrush.Visual = image;
 
-            frame = canvas;
+            Frame = canvas;
             Sprite = new()
             {
                 Name = $"Enemy{id}",
@@ -41,8 +44,10 @@ namespace Floppy_Plane_WPF
                 Width = BaseWidth,
                 Fill = visualBrush,
             };
+
+            if (showHitbox) Sprite.Stroke = Brushes.Red;
             
-            X = (int)(frame.ActualWidth);
+            X = (int)(Frame.ActualWidth);
             Y = yPosition;
 
             image.Loaded += (sender, e) =>
@@ -53,14 +58,16 @@ namespace Floppy_Plane_WPF
 
             Level = level;
 
-            frame.Children.Add(Sprite);
+            SpeedIncreaseValue = speedIncreaseValue;
+
+            Frame.Children.Add(Sprite);
             Canvas.SetLeft(Sprite, X);
             Canvas.SetTop(Sprite, Y);
         }
 
         public void Move()
         {
-            Canvas.SetLeft(Sprite, X -= BaseSpeed + (Level*3));
+            Canvas.SetLeft(Sprite, X -= BaseSpeed + (Level*SpeedIncreaseValue));
         }
     }
 }
