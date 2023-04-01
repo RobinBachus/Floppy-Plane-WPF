@@ -25,13 +25,9 @@ namespace Floppy_Plane_WPF
         /// </summary>
         private DispatcherTimer FrameUpdateTimer { get; }
         /// <summary>
-        /// Timer for spawning enemies
+        /// Timer for enemy interactions such as spawning and collision detection
         /// </summary>
-        private DispatcherTimer EnemySpawnTimer { get; }
-        /// <summary>
-        /// Timer for checking collisions
-        /// </summary>
-        private DispatcherTimer CollisionTimer { get; }
+        private DispatcherTimer EnemyTimer { get; }
         /// <summary>
         /// Timer for increasing the level
         /// </summary>
@@ -55,13 +51,9 @@ namespace Floppy_Plane_WPF
             {
                 Interval = TimeSpan.FromMilliseconds(20)
             };
-            EnemySpawnTimer = new()
+            EnemyTimer = new()
             {
                 Interval = TimeSpan.FromMilliseconds(1)
-            };
-            CollisionTimer = new()
-            {
-                Interval = TimeSpan.FromMilliseconds(5)
             };
             LevelTimer = new()
             {
@@ -69,8 +61,8 @@ namespace Floppy_Plane_WPF
             };
 
             FrameUpdateTimer.Tick += Timer_PlayerMove;
-            EnemySpawnTimer.Tick += (sender, args) => Task.Run(() => Timer_AttemptSpawnEnemy(sender, args));
-            CollisionTimer.Tick += (sender, args) => Task.Run(() => Timer_CheckCollision(sender, args));
+            EnemyTimer.Tick += (sender, args) => Task.Run(() => Timer_AttemptSpawnEnemy(sender, args));
+            EnemyTimer.Tick += (sender, args) => Task.Run(() => Timer_CheckCollision(sender, args));
             LevelTimer.Tick += (sender, args) => Task.Run(() => Timer_Levelup(sender, args));
         }
 
@@ -80,13 +72,12 @@ namespace Floppy_Plane_WPF
             {
                 Player.SetToStartingPosition();
                 Frame.Children.Add(Player.Sprite);
-                setLevel(1);
+                SetLevel(1);
             }
 
             Started = true;
             FrameUpdateTimer.Start();
-            EnemySpawnTimer.Start();
-            CollisionTimer.Start();
+            EnemyTimer.Start();
             LevelTimer.Start();
 
             GameOverScreen.Visibility = Visibility.Hidden;
@@ -132,8 +123,7 @@ namespace Floppy_Plane_WPF
             {
                 // Stop timers
                 FrameUpdateTimer.Stop();
-                EnemySpawnTimer.Stop();
-                CollisionTimer.Stop();
+                EnemyTimer.Stop();
                 LevelTimer.Stop();
 
                 Started = false;
@@ -153,7 +143,7 @@ namespace Floppy_Plane_WPF
         {
             Application.Current.Dispatcher.Invoke(() =>
             {
-                setLevel(++Level);
+                SetLevel(++Level);
             });
 
         }
@@ -167,7 +157,7 @@ namespace Floppy_Plane_WPF
                 double xDistance = Frame.ActualWidth - toTest.X;
                 double yDistance = yPosition - toTest.Y;
                 double distance = Math.Sqrt(Math.Pow(xDistance, 2) + Math.Pow(yDistance, 2));
-                if (distance < 300) return false;
+                if (distance < 200) return false;
             }
 
             return true;
@@ -184,7 +174,7 @@ namespace Floppy_Plane_WPF
             return false;
         }
 
-        private void setLevel(int level)
+        private void SetLevel(int level)
         {
             Level = level;
             UIElement _label = UI.Children[1];

@@ -1,5 +1,7 @@
-﻿using System.Windows.Controls;
+﻿using System;
+using System.Windows.Controls;
 using System.Windows.Media;
+using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 
 namespace Floppy_Plane_WPF
@@ -19,18 +21,35 @@ namespace Floppy_Plane_WPF
 
         public Enemy(Canvas canvas, int id, int yPosition, int level)
         {
+            VisualBrush visualBrush = new();
+
+            // TODO: Get relative paths working for all pc's
+            string path = "Resources\\missile2.png";
+
+            Image image = new()
+            {
+                Source = new BitmapImage(new Uri(path, UriKind.RelativeOrAbsolute))
+            };
+
+            visualBrush.Visual = image;
+
             frame = canvas;
             Sprite = new()
             {
                 Name = $"Enemy{id}",
                 Height = BaseHeight,
                 Width = BaseWidth,
-                Fill = Brushes.Red,
-                Stroke = Brushes.DarkRed,
+                Fill = visualBrush,
             };
             
             X = (int)(frame.ActualWidth);
             Y = yPosition;
+
+            image.Loaded += (sender, e) =>
+            {
+                double ratio = image.ActualHeight / image.ActualWidth;
+                Sprite.Height = Sprite.Width * ratio;
+            };
 
             Level = level;
 

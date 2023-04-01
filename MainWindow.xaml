@@ -4,17 +4,15 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:main="clr-namespace:Floppy_Plane_WPF"
-        xmlns:gif="http://wpfanimatedgif.codeplex.com"
         mc:Ignorable="d"
         Title="MainWindow" Height="600" Width="800">
-
     <Grid>
         <Grid x:Name="Menu">
 
         </Grid>
         <Grid x:Name="GameUI" Panel.ZIndex="10">
-            <Label Content="LEVEL: " Canvas.Left="582" Canvas.Top="10" FontSize="36" FontFamily="Cooper Black" Foreground="#FF6B5FFF" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="551,16,0,0"/>
-            <Label x:Name="LevelIndicator" Content="1" Canvas.Left="736" Canvas.Top="8" FontSize="39" FontFamily="Matura MT Script Capitals" Foreground="#FF6B5FFF" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="705,11,0,0"/>
+            <Label Content="LEVEL: " Canvas.Left="582" Canvas.Top="10" FontSize="36" FontFamily="Quicksand Medium" Foreground="#FF1300FF" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="587,10,0,0" Background="Transparent"/>
+            <Label x:Name="LevelIndicator" Content="1" Canvas.Left="736" Canvas.Top="8" FontSize="39" FontFamily="Quicksand Medium" Foreground="#FF8D00FF" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="720,6,0,0"/>
         </Grid>
         <Canvas x:Name="Frame" Focusable="True" KeyDown="Canvas_KeyDown" Panel.ZIndex="0" Background="#FFB0ECFB">
 
