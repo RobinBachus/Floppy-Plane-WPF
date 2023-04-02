@@ -26,6 +26,16 @@ namespace Floppy_Plane_WPF
             SpeedSlider.ValueChanged += SpeedSlider_ValueChanged;
         }
 
+        private void SetMenuVisibility(Visibility visibility)
+        {
+            if (visibility == Visibility.Visible)
+            {
+                GameUI.Visibility = Visibility.Collapsed;
+            }
+            Menu.Visibility = visibility;
+            Frame.Visibility = visibility;
+        }
+
         private void Canvas_KeyDown(object sender, KeyEventArgs e)
         {
             if (e.Key == Key.Space && (AnimationController.Started || AnimationController.CanRespawn))
@@ -76,17 +86,6 @@ namespace Floppy_Plane_WPF
             Frame.Focus();
             Player.SetToStartingPosition();
         }
-
-        private void SetMenuVisibility(Visibility visibility)
-        {
-            if (visibility == Visibility.Visible)
-            {
-                GameUI.Visibility = Visibility.Collapsed;
-            }
-            Menu.Visibility = visibility;
-            Frame.Visibility = visibility;
-        }
-
         private void ShowHitbox_Click(object sender, RoutedEventArgs e)
         {
             AnimationController.ShowHitBoxes = ShowHitbox.IsChecked ?? false;

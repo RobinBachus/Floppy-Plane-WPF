@@ -81,11 +81,9 @@ namespace Floppy_Plane_WPF
 
         public void StartPlayerAnimation()
         {
-            if (!Frame.Children.Contains(Player.Sprite))
-            {
-                Player.SetToStartingPosition();
-                SetLevel(1);
-            }
+            
+            Player.SetToStartingPosition();
+            SetLevel(1);
 
             Started = true;
             FrameUpdateTimer.Start();
@@ -178,7 +176,7 @@ namespace Floppy_Plane_WPF
                 double xDistance = Frame.ActualWidth - toTest.X;
                 double yDistance = yPosition - toTest.Y;
                 double distance = Math.Sqrt(Math.Pow(xDistance, 2) + Math.Pow(yDistance, 2));
-                if (distance < 200) return false;
+                if (distance < 300) return false;
             }
 
             return true;
