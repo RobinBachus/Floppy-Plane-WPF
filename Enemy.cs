@@ -27,7 +27,7 @@ namespace Floppy_Plane_WPF
             VisualBrush visualBrush = new();
 
             // TODO: Get relative paths working for all pc's
-            string path = "Resources\\missile.png";
+            string path = @"Resources\missile.png";
 
             Image image = new()
             {

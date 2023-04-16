@@ -8,10 +8,9 @@
         Title="MainWindow" Height="600" Width="800"
         Background="#FFB0ECFB">
     <Grid>
-        <Grid x:Name="Menu" Panel.ZIndex="999" Visibility="Visible">
+        <Grid x:Name="Menu" Panel.ZIndex="999">
             <Label x:Name="SettingsButton" Content="⚙️" Margin="714,10,0,0" VerticalAlignment="Top" Background="{x:Null}" FontSize="48" BorderBrush="{x:Null}" Foreground="#FF000296" HorizontalAlignment="Left" FontFamily="Cascadia Code"/>
-            <Label x:Name="Title" Content="FLOPPY  PLANE" Margin="44,28,0,0" VerticalAlignment="Top" Background="{x:Null}" FontSize="56" BorderBrush="{x:Null}" Foreground="#FF000296" HorizontalAlignment="Left" FontFamily="Papyrus" FontWeight="Bold"/>
-
+            <Label Content="FLOPPY  PLANE" Margin="44,28,0,0" VerticalAlignment="Top" Background="{x:Null}" FontSize="56" BorderBrush="{x:Null}" Foreground="#FF000296" HorizontalAlignment="Left" FontFamily="Papyrus" FontWeight="Bold"/>
         </Grid>
         <Grid x:Name="Settings" Panel.ZIndex="999" Visibility="Collapsed">
             <Label Content="SETTINGS" FontSize="48" FontFamily="Bahnschrift SemiBold" Foreground="#FF0500A7" Background="Transparent" HorizontalAlignment="Left" Canvas.Left="587" Canvas.Top="10" VerticalAlignment="Top" Margin="70,10,0,0" Height="69" Width="226"/>

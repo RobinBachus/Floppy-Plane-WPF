@@ -1,5 +1,5 @@
 ﻿using System;
-using System.Reflection.Metadata;
+using System.Collections.Generic;
 using System.Windows.Controls;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
@@ -18,31 +18,27 @@ namespace Floppy_Plane_WPF
         public bool HitFloor { get; private set; }
         public bool ShowHitboxes { get; set; }
 
+        private List<VisualBrush> Sprites { get; } = new(2);
         private const int START_POSITION = 200;
  
         public Player(Canvas canvas)
         {
-            Frame = canvas;
-
-            VisualBrush visualBrush = new();
-
-            // TODO: Get relative paths working for all pc's
-            string path = "Resources\\playerNoBG.png";
+            Frame = canvas; 
 
             // TODO: Try to animate player
-            Image image = new()
+            Image idleSprite = new()
             {
-                Source = new BitmapImage(new Uri(path, UriKind.RelativeOrAbsolute))
+                Source = new BitmapImage(new Uri(@"Resources\player.png", UriKind.RelativeOrAbsolute))
             };
 
-            visualBrush.Visual = image;
+            Sprites.Add(new() { Visual = idleSprite });
 
             Sprite = new()
             {
                 Name = "Player",
                 Height = 0,
                 Width = 125,
-                Fill = visualBrush,
+                Fill = Sprites[0],
             };
 
             ShowHitboxes = false;
@@ -52,11 +48,18 @@ namespace Floppy_Plane_WPF
 
             Speed = 1;
 
-            image.Loaded += (sender, e) =>
+            idleSprite.Loaded += (sender, e) =>
             {
-                double ratio = image.ActualHeight / image.ActualWidth;
-                Sprite.Height = Sprite.Width * ratio;
+                SetSpriteRatio();
             };
+
+            Image jumpSprite = new()
+            {
+                Source = new BitmapImage(new Uri(@"Resources\player_AB.png", UriKind.RelativeOrAbsolute))
+            };
+
+            Sprites.Add(new() { Visual = jumpSprite });
+
 
             Draw();
         }
@@ -79,6 +82,7 @@ namespace Floppy_Plane_WPF
                 if (Speed < 15) Speed++;
 
                 Sprite.RenderTransform = new RotateTransform(Speed * .5);
+                AdjustSprite();
             }
             else
             {
@@ -101,6 +105,30 @@ namespace Floppy_Plane_WPF
             HitFloor = false;
             Sprite.RenderTransform = new RotateTransform(0);
             Draw();
+        }
+
+        private void AdjustSprite()
+        {
+            if (Speed < 0 && Sprite.Fill.Equals(Sprites[0]))
+            {
+                Sprite.Fill = Sprites[1];
+                Sprite.Width = 125.868; // 290/2.304=125.868 to keep sprites equal
+                SetSpriteRatio();
+            }
+            else if (Speed > 0 && Sprite.Fill.Equals(Sprites[1])) 
+            { 
+                Sprite.Fill = Sprites[0];
+                Sprite.Width = 125;
+                SetSpriteRatio();
+            }
+        }
+
+        private void SetSpriteRatio()
+        {
+            VisualBrush _sprite = (VisualBrush)Sprite.Fill;
+            Image _image = (Image)_sprite.Visual;
+            double ratio = _image.ActualHeight / _image.ActualWidth;
+            Sprite.Height = Sprite.Width * ratio;
         }
     }
 }
