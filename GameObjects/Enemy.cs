@@ -4,7 +4,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 
-namespace Floppy_Plane_WPF
+namespace Floppy_Plane_WPF.GameObjects
 {
     internal class Enemy
     {
@@ -31,7 +31,7 @@ namespace Floppy_Plane_WPF
 
             Image image = new()
             {
-                Source = new BitmapImage(new Uri(path, UriKind.RelativeOrAbsolute))
+                Source = new BitmapImage(new Uri(path, UriKind.Relative))
             };
 
             visualBrush.Visual = image;
@@ -46,8 +46,8 @@ namespace Floppy_Plane_WPF
             };
 
             if (showHitbox) Sprite.Stroke = Brushes.Red;
-            
-            X = (int)(Frame.ActualWidth);
+
+            X = (int)Frame.ActualWidth;
             Y = yPosition;
 
             image.Loaded += (sender, e) =>
@@ -67,7 +67,7 @@ namespace Floppy_Plane_WPF
 
         public void Move()
         {
-            Canvas.SetLeft(Sprite, X -= BaseSpeed + (Level*SpeedIncreaseValue));
+            Canvas.SetLeft(Sprite, X -= BaseSpeed + Level * SpeedIncreaseValue);
         }
     }
 }

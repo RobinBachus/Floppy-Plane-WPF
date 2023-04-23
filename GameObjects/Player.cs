@@ -28,7 +28,7 @@ namespace Floppy_Plane_WPF
             // TODO: Try to animate player
             Image idleSprite = new()
             {
-                Source = new BitmapImage(new Uri(@"Resources\player.png", UriKind.RelativeOrAbsolute))
+                Source = new BitmapImage(new Uri(@"Resources\player.png", UriKind.Relative))
             };
 
             Sprites.Add(new() { Visual = idleSprite });
@@ -55,13 +55,10 @@ namespace Floppy_Plane_WPF
 
             Image jumpSprite = new()
             {
-                Source = new BitmapImage(new Uri(@"Resources\player_AB.png", UriKind.RelativeOrAbsolute))
+                Source = new BitmapImage(new Uri(@"Resources\player_AB.png", UriKind.Relative))
             };
 
             Sprites.Add(new() { Visual = jumpSprite });
-
-
-            Draw();
         }
 
         public void Draw()
@@ -71,6 +68,8 @@ namespace Floppy_Plane_WPF
             Canvas.SetTop(Sprite, Y);
             if (ShowHitboxes) Sprite.Stroke = Brushes.Green;
             else Sprite.Stroke = null;
+
+            Frame.Focus();
         }
 
         public void MovePlayer()
