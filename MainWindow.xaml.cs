@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Windows;
 using System.Windows.Input;
+using Floppy_Plane_WPF.GameObjects;
+using Floppy_Plane_WPF.GUI;
 
 namespace Floppy_Plane_WPF
 {
@@ -10,32 +12,25 @@ namespace Floppy_Plane_WPF
     /// </summary>
     public partial class MainWindow : Window
     {
-        private Player Player { get; set; }
+        public Player Player { get; set; }
         private List<Enemy> Enemies { get; set; }
         private AnimationController AnimationController { get; set; }
+        private Menu MenuController { get; set; }
+        private Settings SettingsController { get; set; }
 
         public MainWindow()
         {
             InitializeComponent();
 
+            Player = new(Frame);
             Enemies = new List<Enemy>();
-            Frame.Loaded += Canvas_OnLoad;
-            SettingsButton.MouseDown += SettingsButton_Clicked;
-            SettingsReturnButton.MouseDown += SettingsReturnButton_Clicked;
-            LevelTimeSlider.ValueChanged += LevelTimeSlider_ValueChanged;
-            SpeedSlider.ValueChanged += SpeedSlider_ValueChanged;
-        }
+            AnimationController = new(Player, Frame, GameUI, GameOverScreen, Enemies);
+            MenuController = new(this);
+            SettingsController = new Settings(AnimationController, Player, this);
 
-        private void SetMenuVisibility(Visibility visibility)
-        {
-            if (visibility == Visibility.Visible)
-            {
-                GameUI.Visibility = Visibility.Collapsed;
-            }
-            Menu.Visibility = visibility;
-            Frame.Visibility = visibility;
+            Frame.Loaded += (s, e) => Player.Draw();
         }
-
+        
         private void Canvas_KeyDown(object sender, KeyEventArgs e)
         {
             if (e.Key == Key.Space && (AnimationController.Started || AnimationController.CanRespawn))
@@ -48,49 +43,6 @@ namespace Floppy_Plane_WPF
                 }
                 Player.Jump();
             }
-        }
-
-        private void Canvas_OnLoad(object sender, RoutedEventArgs routedEvent)
-        {
-            Frame.Focus();
-            Player = new(Frame);
-            
-            AnimationController = new(Player, Frame, GameUI, GameOverScreen, Enemies);
-        }
-        
-        private void SettingsButton_Clicked(object sender, MouseEventArgs e) 
-        {
-            SetMenuVisibility(Visibility.Collapsed);
-            Settings.Visibility = Visibility.Visible;
-        }
-        private void SettingsReturnButton_Clicked(object sender, MouseEventArgs e)
-        {
-            SetMenuVisibility(Visibility.Visible);
-            Settings.Visibility = Visibility.Collapsed;
-            Frame.Focus();
-        }
-        private void LevelTimeSlider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
-        {
-            LevelTimeValue.Content = $"{Convert.ToInt32(e.NewValue)} sec";
-            AnimationController.SetLevelUpTime(Convert.ToInt32(e.NewValue));
-        }
-        private void SpeedSlider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
-        {
-            SpeedValue.Content = $"{Convert.ToInt32(e.NewValue)}x";
-            AnimationController.SpeedIncreaseValue = Convert.ToInt32(e.NewValue);
-        }
-        private void GameOverMenuButton_Click(object sender, RoutedEventArgs e)
-        {
-            SetMenuVisibility(Visibility.Visible);
-            GameOverScreen.Visibility = Visibility.Collapsed;
-            Frame.Focus();
-            Player.SetToStartingPosition();
-        }
-        private void ShowHitbox_Click(object sender, RoutedEventArgs e)
-        {
-            AnimationController.ShowHitBoxes = ShowHitbox.IsChecked ?? false;
-            Player.ShowHitboxes = ShowHitbox.IsChecked ?? false;
-            Player.Draw();
         }
     }
 }

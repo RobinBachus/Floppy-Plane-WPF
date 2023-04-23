@@ -8,7 +8,7 @@
         Title="MainWindow" Height="600" Width="800"
         Background="#FFB0ECFB">
     <Grid>
-        <Grid x:Name="Menu" Panel.ZIndex="999">
+        <Grid x:Name="Menu" Panel.ZIndex="999" Visibility="Visible">
             <Label x:Name="SettingsButton" Content="⚙️" Margin="714,10,0,0" VerticalAlignment="Top" Background="{x:Null}" FontSize="48" BorderBrush="{x:Null}" Foreground="#FF000296" HorizontalAlignment="Left" FontFamily="Cascadia Code"/>
             <Label Content="FLOPPY  PLANE" Margin="44,28,0,0" VerticalAlignment="Top" Background="{x:Null}" FontSize="56" BorderBrush="{x:Null}" Foreground="#FF000296" HorizontalAlignment="Left" FontFamily="Papyrus" FontWeight="Bold"/>
         </Grid>
@@ -24,13 +24,10 @@
             <Label Content="Speed increase" FontSize="20" FontFamily="Bahnschrift SemiBold" Foreground="#FF0500A7" Background="Transparent" Margin="32,156,0,0" ToolTip="The speed of the missiles is calculated by multiplying this value to the current level. " HorizontalAlignment="Left" VerticalAlignment="Top"/>
             <Label x:Name="SpeedValue" Content="3x" FontSize="20" FontFamily="Bahnschrift SemiBold" Foreground="#FF0500A7" Background="Transparent" Margin="368,156,0,0" ToolTip="" HorizontalAlignment="Left" VerticalAlignment="Top"/>
              
-            <CheckBox x:Name="ShowHitbox" Content="" HorizontalAlignment="Left" Margin="198,204,0,0" VerticalAlignment="Top" RenderTransformOrigin="0.5,0.5" Click="ShowHitbox_Click">
+            <CheckBox x:Name="ShowHitbox" Content="" HorizontalAlignment="Left" Margin="198,204,0,0" VerticalAlignment="Top" RenderTransformOrigin="0.5,0.5">
                 <CheckBox.RenderTransform>
                     <TransformGroup>
                         <ScaleTransform ScaleX="2" ScaleY="2"/>
-                        <SkewTransform/>
-                        <RotateTransform/>
-                        <TranslateTransform/>
                     </TransformGroup>
                 </CheckBox.RenderTransform>
             </CheckBox>
@@ -59,7 +56,7 @@
                 </Label.RenderTransform>
             </Label>
             <Label Content="Press space to restart!"  HorizontalAlignment="Center" Margin="0,274,0,0" VerticalAlignment="Top" BorderBrush="{x:Null}" Foreground="#FFFF7500" FontSize="56" FontFamily="Cooper Black" FontWeight="Bold"/>
-            <Button x:Name="GameOverMenuButton" Content="&lt;- MENU" HorizontalAlignment="Center" Margin="0,472,0,0" VerticalAlignment="Top" Background="{x:Null}" IsCancel="True" FontSize="36" BorderBrush="{x:Null}" Foreground="#FF023AE6" Click="GameOverMenuButton_Click" IsEnabled="true" FontFamily="Cascadia Mono SemiBold"/>
+            <Button x:Name="GameOverMenuButton" Content="&lt;- MENU" HorizontalAlignment="Center" Margin="0,472,0,0" VerticalAlignment="Top" Background="{x:Null}" IsCancel="True" FontSize="36" BorderBrush="{x:Null}" Foreground="#FF023AE6" IsEnabled="true" FontFamily="Cascadia Mono SemiBold"/>
         </Grid>
     </Grid>
 </Window>

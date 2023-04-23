@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Threading;
+using Floppy_Plane_WPF.GameObjects;
 
 namespace Floppy_Plane_WPF
 {
