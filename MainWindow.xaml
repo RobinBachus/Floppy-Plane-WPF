@@ -8,30 +8,35 @@
         Title="MainWindow" Height="600" Width="800"
         Background="#FFB0ECFB">
     <Grid>
-        <Grid x:Name="Menu" Panel.ZIndex="999" Visibility="Visible">
+        <Grid x:Name="Menu" Panel.ZIndex="999" Visibility="Hidden">
             <Label x:Name="SettingsButton" Content="⚙️" Margin="714,10,0,0" VerticalAlignment="Top" Background="{x:Null}" FontSize="48" BorderBrush="{x:Null}" Foreground="#FF000296" HorizontalAlignment="Left" FontFamily="Cascadia Code"/>
             <Label Content="FLOPPY  PLANE" Margin="44,28,0,0" VerticalAlignment="Top" Background="{x:Null}" FontSize="56" BorderBrush="{x:Null}" Foreground="#FF000296" HorizontalAlignment="Left" FontFamily="Papyrus" FontWeight="Bold"/>
         </Grid>
-        <Grid x:Name="Settings" Panel.ZIndex="999" Visibility="Collapsed">
-            <Label Content="SETTINGS" FontSize="48" FontFamily="Bahnschrift SemiBold" Foreground="#FF0500A7" Background="Transparent" HorizontalAlignment="Left" Canvas.Left="587" Canvas.Top="10" VerticalAlignment="Top" Margin="70,10,0,0" Height="69" Width="226"/>
+        <Grid x:Name="Settings" Panel.ZIndex="999" Visibility="Visible">
+            <Label Content="SETTINGS" FontSize="48" FontFamily="Bahnschrift SemiBold" Foreground="#FF0500A7" Background="Transparent" HorizontalAlignment="Left" Canvas.Left="587" Canvas.Top="10" VerticalAlignment="Top" Margin="32,15,0,0" Height="69" Width="226"/>
             <Label x:Name="SettingsReturnButton" Content="RETURN" FontFamily="Bahnschrift SemiBold" HorizontalAlignment="Left" Margin="618,26,0,0" VerticalAlignment="Top" Background="{x:Null}" Foreground="#FF0500A7" FontSize="36"/>
 
-            <Slider x:Name="LevelTimeSlider" HorizontalAlignment="Left" Margin="188,125,0,0" VerticalAlignment="Top" Width="175" Background="#33001BFF" Value="5" Maximum="30" Minimum="1" AutoToolTipPlacement="BottomRight" SmallChange="1"/>
-            <Label Content="Level time" FontSize="20" FontFamily="Bahnschrift SemiBold" Foreground="#FF0500A7" Background="Transparent" Margin="70,117,0,0" ToolTip="The time it takes to go to the next level in seconds." HorizontalAlignment="Left" VerticalAlignment="Top" AutomationProperties.HelpText="Help Text"/>
-            <Label x:Name="LevelTimeValue" Content="5 sec" FontSize="20" FontFamily="Bahnschrift SemiBold" Foreground="#FF0500A7" Background="Transparent" Margin="368,117,0,0" ToolTip="" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+            <Slider x:Name="LevelTimeSlider" HorizontalAlignment="Left" Margin="213,127,0,0" VerticalAlignment="Top" Width="271" Background="#33001BFF" Value="5" Maximum="30" Minimum="1" AutoToolTipPlacement="BottomRight" SmallChange="1"/>
+            <Label Content="Level time" FontSize="20" FontFamily="Bahnschrift SemiBold" Foreground="#FF0500A7" Background="Transparent" Margin="105,119,0,0" ToolTip="The time it takes to go to the next level in seconds." HorizontalAlignment="Left" VerticalAlignment="Top" AutomationProperties.HelpText="Help Text"/>
+            <Label x:Name="LevelTimeValue" Content="5 sec" FontSize="20" FontFamily="Bahnschrift SemiBold" Foreground="#FF0500A7" Background="Transparent" Margin="496,119,0,0" ToolTip="" HorizontalAlignment="Left" VerticalAlignment="Top"/>
 
-            <Slider x:Name="SpeedSlider" HorizontalAlignment="Left" Margin="188,164,0,0" VerticalAlignment="Top" Width="175" Background="#33001BFF" Value="3" Maximum="15" Minimum="1" AutoToolTipPlacement="BottomRight" SmallChange="1"/>
-            <Label Content="Speed increase" FontSize="20" FontFamily="Bahnschrift SemiBold" Foreground="#FF0500A7" Background="Transparent" Margin="32,156,0,0" ToolTip="The speed of the missiles is calculated by multiplying this value to the current level. " HorizontalAlignment="Left" VerticalAlignment="Top"/>
-            <Label x:Name="SpeedValue" Content="3x" FontSize="20" FontFamily="Bahnschrift SemiBold" Foreground="#FF0500A7" Background="Transparent" Margin="368,156,0,0" ToolTip="" HorizontalAlignment="Left" VerticalAlignment="Top"/>
-             
-            <CheckBox x:Name="ShowHitbox" Content="" HorizontalAlignment="Left" Margin="198,204,0,0" VerticalAlignment="Top" RenderTransformOrigin="0.5,0.5">
+            <Slider x:Name="SpeedSlider" HorizontalAlignment="Left" Margin="213,166,0,0" VerticalAlignment="Top" Width="271" Background="#33001BFF" Value="3" Maximum="15" Minimum="1" AutoToolTipPlacement="BottomRight" SmallChange="1"/>
+            <Label Content="Speed increase" FontSize="20" FontFamily="Bahnschrift SemiBold" Foreground="#FF0500A7" Background="Transparent" Margin="60,156,0,0" ToolTip="The speed of the missiles is calculated by multiplying this value to the current level. " HorizontalAlignment="Left" VerticalAlignment="Top"/>
+            <Label x:Name="SpeedValue" Content="3x" FontSize="20" FontFamily="Bahnschrift SemiBold" Foreground="#FF0500A7" Background="Transparent" Margin="496,158,0,0" ToolTip="" HorizontalAlignment="Left" VerticalAlignment="Top" RenderTransformOrigin="0.566,0.501"/>
+
+            <Slider x:Name="SafeDistanceSlider" HorizontalAlignment="Left" Margin="213,205,0,0" VerticalAlignment="Top" Width="271" Background="#33001BFF" Value="300" Maximum="1000" Minimum="1" AutoToolTipPlacement="BottomRight" SmallChange="1" LargeChange="10"/>
+            <Label Content="Safe spawn distance" FontSize="20" FontFamily="Bahnschrift SemiBold" Foreground="#FF0500A7" Background="Transparent" Margin="14,195,0,0" ToolTip="The minimum distance a missile has to be away from other missiles to be able to spawn" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+            <Label x:Name="SafeDistanceValue" Content="300px" FontSize="20" FontFamily="Bahnschrift SemiBold" Foreground="#FF0500A7" Background="Transparent" Margin="496,197,0,0" ToolTip="" HorizontalAlignment="Left" VerticalAlignment="Top" RenderTransformOrigin="0.566,0.501"/>
+
+            <CheckBox x:Name="ShowHitbox" Content="" HorizontalAlignment="Left" Margin="190,496,0,0" VerticalAlignment="Top" RenderTransformOrigin="0.5,0.5">
                 <CheckBox.RenderTransform>
                     <TransformGroup>
                         <ScaleTransform ScaleX="2" ScaleY="2"/>
                     </TransformGroup>
                 </CheckBox.RenderTransform>
             </CheckBox>
-            <Label Content="Show Hitboxes" FontSize="20" FontFamily="Bahnschrift SemiBold" Foreground="#FF0500A7" Background="Transparent" Margin="37,196,0,0" ToolTip="The speed of the missiles is calculated by multiplying this value to the current level. " HorizontalAlignment="Left" VerticalAlignment="Top"/>
+            <Label Content="Show Hitboxes" FontSize="20" FontFamily="Bahnschrift SemiBold" Foreground="#FF0500A7" Background="Transparent" Margin="32,487,0,0" ToolTip="The speed of the missiles is calculated by multiplying this value to the current level. " HorizontalAlignment="Left" VerticalAlignment="Top"/>
+            <Label Content="Debug" FontSize="36" FontFamily="Bahnschrift SemiBold" Foreground="#FF0500A7" Background="Transparent" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="32,435,0,0" />
         </Grid>
 
         <Grid x:Name="GameUI" Panel.ZIndex="10" Visibility="Collapsed">

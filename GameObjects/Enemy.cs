@@ -26,7 +26,6 @@ namespace Floppy_Plane_WPF.GameObjects
         {
             VisualBrush visualBrush = new();
 
-            // TODO: Get relative paths working for all pc's
             string path = @"Resources\missile.png";
 
             Image image = new()

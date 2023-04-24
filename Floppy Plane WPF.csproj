@@ -12,6 +12,8 @@
     <None Remove="Resources\missile.png" />
     <None Remove="Resources\player.png" />
     <None Remove="Resources\player_AB.png" />
+    <None Remove="Resources\test.png" />
+    <None Remove="Resources\testAB.png" />
   </ItemGroup>
 
   <ItemGroup>

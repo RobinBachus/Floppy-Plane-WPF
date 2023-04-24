@@ -25,7 +25,6 @@ namespace Floppy_Plane_WPF
         {
             Frame = canvas; 
 
-            // TODO: Try to animate player
             Image idleSprite = new()
             {
                 Source = new BitmapImage(new Uri(@"Resources\player.png", UriKind.Relative))
@@ -111,14 +110,10 @@ namespace Floppy_Plane_WPF
             if (Speed < 0 && Sprite.Fill.Equals(Sprites[0]))
             {
                 Sprite.Fill = Sprites[1];
-                Sprite.Width = 125.868; // 290/2.304=125.868 to keep sprites equal
-                SetSpriteRatio();
             }
             else if (Speed > 0 && Sprite.Fill.Equals(Sprites[1])) 
             { 
                 Sprite.Fill = Sprites[0];
-                Sprite.Width = 125;
-                SetSpriteRatio();
             }
         }
 

@@ -4,14 +4,20 @@ A practice project for c#. Its a small Floppy Bird Like game made with WPF.
 ## TODO
 
 - [ ] Add more settings
-    - [ ] Adjustable safe enemy spawn distance
+    - [x] Adjustable safe enemy spawn distance
     - [ ] Adjustable enemy spawn rate
+    - [ ] Adjustable gravity
     - [ ] (After sound effects) Adjustable volume
+    - [ ] (optional) Adjustable player and enemy sizes
 - [ ] Add sound effects
     - [ ] Add BG music
     - [ ] Add jump sound
     - [ ] Add death sound
-- [ ] Increase sprite quality
+- [x] Increase sprite quality
+- [ ] Add option to change skins
+    - [ ] Add selection screen
+    - [ ] Add skins
+    - [ ] (optional) Add point system
 - [ ] Organize and comment code
 - [ ] Look for potential code optimizations
 

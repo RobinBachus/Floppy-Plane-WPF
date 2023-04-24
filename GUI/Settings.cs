@@ -20,6 +20,7 @@ namespace Floppy_Plane_WPF.GUI
 
             MainWindow.LevelTimeSlider.ValueChanged += LevelTimeSlider_ValueChanged;
             MainWindow.SpeedSlider.ValueChanged += SpeedSlider_ValueChanged;
+            MainWindow.SafeDistanceSlider.ValueChanged += SafeDistanceSlider_ValueChanged;
             MainWindow.ShowHitbox.Click += ShowHitbox_Click;
         }
 
@@ -33,6 +34,12 @@ namespace Floppy_Plane_WPF.GUI
         {
             MainWindow.SpeedValue.Content = $"{Convert.ToInt32(e.NewValue)}x";
             AnimationController.SpeedIncreaseValue = Convert.ToInt32(e.NewValue);
+        }
+
+        private void SafeDistanceSlider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
+        {
+            MainWindow.SafeDistanceValue.Content = $"{Convert.ToInt32(e.NewValue)}px";
+            AnimationController.SafeDistance = Convert.ToInt32(e.NewValue);
         }
 
         private void ShowHitbox_Click(object sender, RoutedEventArgs e)

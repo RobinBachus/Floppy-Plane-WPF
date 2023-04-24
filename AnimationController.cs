@@ -18,11 +18,14 @@ namespace Floppy_Plane_WPF
         private Grid GameOverScreen { get; }
         private Random Random { get; }
 
+        public bool CanRespawn { get; private set; }
+
         public bool Started { get; set; }
         public int Level { get; set; }
         public int SpeedIncreaseValue { get; set; }
         public bool ShowHitBoxes { get; set; }
-        public bool CanRespawn { get; private set; }
+        public int SafeDistance { get; set; }
+
 
         /// <summary>
         /// Timer for the animations
@@ -49,12 +52,14 @@ namespace Floppy_Plane_WPF
             GameOverScreen = gameOverScreen;
             Enemies = enemies;
 
+            CanRespawn = true;
+
             Random = new Random();
             Started = false;
             Level = 1;
             SpeedIncreaseValue = 3;
             ShowHitBoxes = false;
-            CanRespawn = true;
+            SafeDistance = 300;
 
             FrameUpdateTimer = new()
             {
@@ -177,7 +182,7 @@ namespace Floppy_Plane_WPF
                 double xDistance = Frame.ActualWidth - toTest.X;
                 double yDistance = yPosition - toTest.Y;
                 double distance = Math.Sqrt(Math.Pow(xDistance, 2) + Math.Pow(yDistance, 2));
-                if (distance < 300) return false;
+                if (distance < SafeDistance) return false;
             }
 
             return true;
@@ -199,6 +204,7 @@ namespace Floppy_Plane_WPF
             Level = level;
             UIElement _label = UI.Children[1];
             if (_label is Label label && label.Name == "LevelIndicator") label.Content = $"{level}";
+            else throw new Exception("Could not find level indicator label");
         }
 
         public void SetLevelUpTime(int time)
