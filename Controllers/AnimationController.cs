@@ -6,7 +6,7 @@ using System.Windows.Controls;
 using System.Windows.Threading;
 using Floppy_Plane_WPF.GameObjects;
 
-namespace Floppy_Plane_WPF
+namespace Floppy_Plane_WPF.Controllers
 {
     internal class AnimationController
     {
@@ -41,10 +41,17 @@ namespace Floppy_Plane_WPF
         private DispatcherTimer LevelTimer { get; }
         /// <summary> 
         /// Allows for a short period of time between dying and being able to restart to avoid accidental restarts after dying
-        /// </summary> */
+        /// </summary>
         private DispatcherTimer DeathDelayTimer { get; }
 
-        public AnimationController(Player player, Canvas canvas, Grid GameUI,  Grid gameOverScreen , List<Enemy> enemies)
+        /// <summary>
+        /// Execute an <see cref="Action"/> on the <see cref="Dispatcher"/> Thread.
+        /// Used to manipulate object properties from within multi-threaded functions.
+        /// </summary>
+        /// <param name="callback">The <see cref="Action"/> to execute</param>
+        private static void Invoke(Action callback) => Application.Current.Dispatcher.Invoke(callback);
+
+        public AnimationController(Player player, Canvas canvas, Grid GameUI, Grid gameOverScreen, List<Enemy> enemies)
         {
             Player = player;
             Frame = canvas;
@@ -61,34 +68,22 @@ namespace Floppy_Plane_WPF
             ShowHitBoxes = false;
             SafeDistance = 300;
 
-            FrameUpdateTimer = new()
-            {
-                Interval = TimeSpan.FromMilliseconds(20)
-            };
-            EnemyTimer = new()
-            {
-                Interval = TimeSpan.FromMilliseconds(1)
-            };
-            LevelTimer = new()
-            {
-                Interval = TimeSpan.FromSeconds(5)
-            };
-            DeathDelayTimer = new()
-            {
-                Interval= TimeSpan.FromSeconds(.5)
-            };
+            FrameUpdateTimer = new() { Interval = TimeSpan.FromMilliseconds(20) };
+            EnemyTimer = new() { Interval = TimeSpan.FromMilliseconds(1) };
+            LevelTimer = new() { Interval = TimeSpan.FromSeconds(5) };
+            DeathDelayTimer = new() { Interval = TimeSpan.FromSeconds(.5) };
 
             FrameUpdateTimer.Tick += Timer_PlayerMove;
-            EnemyTimer.Tick += (sender, args) => Task.Run(() => Timer_AttemptSpawnEnemy(sender, args));
-            EnemyTimer.Tick += (sender, args) => Task.Run(() => Timer_CheckCollision(sender, args));
-            LevelTimer.Tick += (sender, args) => Task.Run(() => Timer_Levelup(sender, args));
+            EnemyTimer.Tick += (sender, args) => Task.Run(Timer_AttemptSpawnEnemy);
+            EnemyTimer.Tick += (sender, args) => Task.Run(Timer_CheckCollision);
+            LevelTimer.Tick += (sender, args) => Task.Run(() => Invoke(() => SetLevel(++Level)));
             DeathDelayTimer.Tick += Timer_DeathDelay;
         }
 
         public void StartPlayerAnimation()
         {
-            
-            Player.SetToStartingPosition();
+
+            Player.SetToStartPosition();
             SetLevel(1);
 
             Started = true;
@@ -103,36 +98,33 @@ namespace Floppy_Plane_WPF
         {
             Player.MovePlayer();
             // Move enemies and check if any have left the screen
-            List<Enemy> toRemove = Enemies.FindAll((enemy) => {
+            List<Enemy> toRemove = Enemies.FindAll((enemy) =>
+            {
                 enemy.Move();
-                return enemy.X <= 0 +25 - Enemy.BaseWidth; 
+                return enemy.X <= 0 + 25 - Enemy.BaseWidth;
             });
 
             // Remove the enemies that have left the screen
-            toRemove.ForEach(enemy => {
+            toRemove.ForEach(enemy =>
+            {
                 Frame.Children.Remove(enemy.Sprite);
                 Enemies.Remove(enemy);
                 Enemies.TrimExcess();
             });
         }
 
-        private void Timer_AttemptSpawnEnemy(object? sender, EventArgs e) 
+        private void Timer_AttemptSpawnEnemy()
         {
             // Has a random chance to spawn an enemy on every tick
             if (Random.Next(25) == 10 || Enemies.Count == 0)
             {
                 int yPos = Random.Next((int)(Frame.ActualHeight - Enemy.BaseHeight));
-                if (IsSafeDistace(yPos))
-                {
-                    Application.Current.Dispatcher.Invoke(() =>
-                    {
-                        Enemies.Add(new(Frame, ++EnemyCount, yPos, Level, SpeedIncreaseValue, ShowHitBoxes));
-                    });
-                }
+                if (!IsSafeDistace(yPos)) return;
+                Invoke(() => Enemies.Add(new(Frame, ++EnemyCount, yPos, Level, SpeedIncreaseValue, ShowHitBoxes)));
             }
         }
 
-        private void Timer_CheckCollision(object? sender, EventArgs e)
+        private void Timer_CheckCollision()
         {
             // Check if player has lost
             if (EnemyHit() || Player.HitFloor)
@@ -147,7 +139,7 @@ namespace Floppy_Plane_WPF
 
                 Started = false;
 
-                Application.Current.Dispatcher.Invoke(() =>
+                Invoke(() =>
                 {
                     // Clear items on screen
                     Enemies.Clear();
@@ -156,15 +148,6 @@ namespace Floppy_Plane_WPF
                     GameOverScreen.Visibility = Visibility.Visible;
                 });
             }
-        }
-
-        private void Timer_Levelup(object? sender, EventArgs e)
-        {
-            Application.Current.Dispatcher.Invoke(() =>
-            {
-                SetLevel(++Level);
-            });
-
         }
 
         private void Timer_DeathDelay(object? sender, EventArgs e)

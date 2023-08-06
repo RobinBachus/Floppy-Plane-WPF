@@ -64,9 +64,6 @@ namespace Floppy_Plane_WPF.GameObjects
             Canvas.SetTop(Sprite, Y);
         }
 
-        public void Move()
-        {
-            Canvas.SetLeft(Sprite, X -= BaseSpeed + Level * SpeedIncreaseValue);
-        }
+        public void Move() => Canvas.SetLeft(Sprite, X -= BaseSpeed + Level * SpeedIncreaseValue);
     }
 }

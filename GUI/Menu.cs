@@ -30,13 +30,13 @@ namespace Floppy_Plane_WPF.GUI
         private void SettingsButton_Clicked(object sender, MouseEventArgs e)
         {
             SetMenuVisibility(Visibility.Collapsed);
-            MainWindow.Settings.Visibility = Visibility.Visible;
+            MainWindow.SettingsWindow.Visibility = Visibility.Visible;
         }
 
         private void SettingsReturnButton_Clicked(object sender, MouseEventArgs e)
         {
             SetMenuVisibility(Visibility.Visible);
-            MainWindow.Settings.Visibility = Visibility.Collapsed;
+            MainWindow.SettingsWindow.Visibility = Visibility.Collapsed;
             MainWindow.Frame.Focus();
         }
 
@@ -45,7 +45,7 @@ namespace Floppy_Plane_WPF.GUI
             SetMenuVisibility(Visibility.Visible);
             MainWindow.GameOverScreen.Visibility = Visibility.Collapsed;
             MainWindow.Frame.Focus();
-            MainWindow.Player.SetToStartingPosition();
+            MainWindow.Player.SetToStartPosition();
         }
     }
 }

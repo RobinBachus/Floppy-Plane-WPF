@@ -2,8 +2,10 @@
 using System.Collections.Generic;
 using System.Windows;
 using System.Windows.Input;
+using Floppy_Plane_WPF.Controllers;
 using Floppy_Plane_WPF.GameObjects;
 using Floppy_Plane_WPF.GUI;
+using Floppy_Plane_WPF.GUI.Components;
 
 namespace Floppy_Plane_WPF
 {
@@ -13,10 +15,10 @@ namespace Floppy_Plane_WPF
     public partial class MainWindow : Window
     {
         public Player Player { get; set; }
+        public FpsCounter Fps { get; }
         private List<Enemy> Enemies { get; set; }
         private AnimationController AnimationController { get; set; }
         private Menu MenuController { get; set; }
-        private Settings SettingsController { get; set; }
 
         public MainWindow()
         {
@@ -26,7 +28,9 @@ namespace Floppy_Plane_WPF
             Enemies = new List<Enemy>();
             AnimationController = new(Player, Frame, GameUI, GameOverScreen, Enemies);
             MenuController = new(this);
-            SettingsController = new Settings(AnimationController, Player, this);
+            Settings.SetSettingEventHandlers(AnimationController, Player, this);
+
+            Fps = new FpsCounter(FpsDisplay);
 
             Frame.Loaded += (s, e) => Player.Draw();
         }

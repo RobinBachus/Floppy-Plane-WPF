@@ -7,6 +7,7 @@ A practice project for c#. Its a small Floppy Bird Like game made with WPF.
     - [x] Adjustable safe enemy spawn distance
     - [ ] Adjustable enemy spawn rate
     - [ ] Adjustable gravity
+    - [ ] Fps counter toggle
     - [ ] (After sound effects) Adjustable volume
     - [ ] (optional) Adjustable player and enemy sizes
 - [ ] Add sound effects
