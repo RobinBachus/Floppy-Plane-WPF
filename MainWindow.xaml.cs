@@ -10,7 +10,7 @@ using Floppy_Plane_WPF.GUI.Components;
 namespace Floppy_Plane_WPF
 {
     /// <summary>
-    /// Interaction logic for MainWindow.xaml
+    /// Interaction logic for Window.xaml
     /// </summary>
     public partial class MainWindow : Window
     {
