@@ -1,6 +1,5 @@
-﻿using System.Windows.Controls;
+﻿using System.Windows;
 using System.Windows.Input;
-using System.Windows;
 
 namespace Floppy_Plane_WPF.GUI
 {

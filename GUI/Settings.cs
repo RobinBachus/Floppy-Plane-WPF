@@ -1,13 +1,12 @@
 ﻿using System;
 using System.Windows;
-using System.Windows.Controls;
 using Floppy_Plane_WPF.Controllers;
 
 namespace Floppy_Plane_WPF.GUI
 {
     internal class Settings
     {
-        public static void SetSettingEventHandlers(AnimationController animationController, Player player, MainWindow mainWindow)
+        public static void AddSettingEventHandlers(AnimationController animationController, Player player, MainWindow mainWindow)
         {
             Sliders sliders = new(animationController, mainWindow);
             CheckBoxes checkboxes = new(animationController, player, mainWindow);

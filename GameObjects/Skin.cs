@@ -7,8 +7,8 @@ namespace Floppy_Plane_WPF.GameObjects
     internal class Skin
     {
         public string Name { get; } 
-        public Image IdleSprite {  get; }
-        public Image JumpSprite { get; }
+        public Image IdleImage {  get; }
+        public Image JumpImage { get; }
 
         public Skin(string sourceDir)
         {
@@ -16,10 +16,10 @@ namespace Floppy_Plane_WPF.GameObjects
             Name = sourceDir[(sourceDir.LastIndexOf("/")+1)..];
 
             BitmapImage idleSource = new (new Uri($"{sourceDir}/player.png", UriKind.Absolute));
-            IdleSprite = new() { Source = idleSource };
+            IdleImage = new() { Source = idleSource };
 
             BitmapImage jumpSource = new(new Uri($"{sourceDir}/player_AB.png", UriKind.Absolute));
-            JumpSprite = new() { Source = jumpSource };
+            JumpImage = new() { Source = jumpSource };
         }
 
         //private void SetSpriteRatio()

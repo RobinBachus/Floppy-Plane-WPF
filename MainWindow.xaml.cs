@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
+using System.Media;
 using System.Windows;
 using System.Windows.Input;
 using Floppy_Plane_WPF.Controllers;
@@ -14,11 +16,12 @@ namespace Floppy_Plane_WPF
     /// </summary>
     public partial class MainWindow : Window
     {
-        public Player Player { get; set; }
+        public Player Player { get;}
         public FpsCounter Fps { get; }
-        private List<Enemy> Enemies { get; set; }
-        private AnimationController AnimationController { get; set; }
-        private Menu MenuController { get; set; }
+        private List<Enemy> Enemies { get; }
+        private AnimationController AnimationController { get; }
+        private Menu MenuController { get; }
+        private SoundPlayer SoundPlayer { get; }
 
         public MainWindow()
         {
@@ -28,7 +31,11 @@ namespace Floppy_Plane_WPF
             Enemies = new List<Enemy>();
             AnimationController = new(Player, Frame, GameUI, GameOverScreen, Enemies);
             MenuController = new(this);
-            Settings.SetSettingEventHandlers(AnimationController, Player, this);
+            Settings.AddSettingEventHandlers(AnimationController, Player, this);
+
+            SoundPlayer = new(Path.GetFullPath("Resources\\Sounds\\Engine.wav"));
+            SoundPlayer.LoadCompleted += (x, args) => { SoundPlayer.Play(); };
+            SoundPlayer.Load();
 
             Fps = new FpsCounter(FpsDisplay);
 

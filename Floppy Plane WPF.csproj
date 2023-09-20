@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
-    <TargetFramework>net6.0-windows</TargetFramework>
+    <TargetFramework>net7.0-windows</TargetFramework>
     <RootNamespace>Floppy_Plane_WPF</RootNamespace>
     <Nullable>enable</Nullable>
     <UseWPF>true</UseWPF>
@@ -12,9 +12,12 @@
     <None Remove="Resources\icon.png" />
     <None Remove="Resources\missile.png" />
     <None Remove="Resources\player.png" />
+    <None Remove="Resources\PlayerSkins\Camo\player.png" />
+    <None Remove="Resources\PlayerSkins\Camo\player_AB.png" />
     <None Remove="Resources\PlayerSkins\player.png" />
     <None Remove="Resources\PlayerSkins\player_AB.png" />
     <None Remove="Resources\player_AB.png" />
+    <None Remove="Resources\Sounds\Engine.wav" />
     <None Remove="Resources\test.png" />
     <None Remove="Resources\testAB.png" />
   </ItemGroup>
@@ -27,12 +30,15 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </EmbeddedResource>
     <EmbeddedResource Include="Resources\PlayerSkins\Default\player.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </EmbeddedResource>
     <EmbeddedResource Include="Resources\PlayerSkins\Default\player_AB.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </EmbeddedResource>
     <EmbeddedResource Include="Resources\player_AB.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Resources\Sounds\Engine.wav">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </EmbeddedResource>
   </ItemGroup>
@@ -45,15 +51,12 @@
     <Resource Include="Resources\icon.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Resource>
-  </ItemGroup>
-
-  <ItemGroup>
-    <None Update="Resources\PlayerSkins\Camo\player.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Update="Resources\PlayerSkins\Camo\player_AB.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
+    <EmbeddedResource Include="Resources\PlayerSkins\Camo\player.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Resources\PlayerSkins\Camo\player_AB.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </EmbeddedResource>
   </ItemGroup>
 
 </Project>
