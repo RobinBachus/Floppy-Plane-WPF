@@ -1,6 +1,7 @@
-﻿using System;
+﻿using Floppy_Plane_WPF.Controllers;
+using Floppy_Plane_WPF.GameObjects;
+using System;
 using System.Collections.Generic;
-using System.Security.Policy;
 using System.Windows.Controls;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
@@ -16,18 +17,20 @@ namespace Floppy_Plane_WPF
         public double Speed { get; private set; }
         public bool HitFloor { get; private set; }
 
-        private bool showHitboxes;
-        public bool ShowHitboxes { 
-            get => showHitboxes; 
+        private bool _showHitboxes;
+        public bool ShowHitBoxes
+        {
+            get => _showHitboxes; 
             set
             {
                 Sprite.Stroke = value ? Brushes.Green : null;
-                showHitboxes = value;
+                _showHitboxes = value;
             }
         }
 
         private Canvas Frame { get; }
         private List<VisualBrush> Sprites { get; } = new(2);
+        private PlayerGraphicsController GraphicsController { get; }
         private int CurrentSprite { get; set; } = 0;
         private RotateTransform Rotation { get; } = new(0);
 
@@ -35,14 +38,12 @@ namespace Floppy_Plane_WPF
  
         public Player(Canvas canvas)
         {
-            Frame = canvas; 
+            Frame = canvas;
 
-            Image idleSprite = new()
-            {
-                Source = new BitmapImage(new Uri(@"Resources\player.png", UriKind.Relative))
-            };
+            Skin skin = new(@"Resources\PlayerSkins\Default");
+            GraphicsController = new PlayerGraphicsController(this);
 
-            Sprites.Add(new() { Visual = idleSprite });
+            Sprites.Add(new() { Visual = GraphicsController.CurrentSkin.IdleSprite });
 
             Sprite = new()
             {
@@ -53,24 +54,19 @@ namespace Floppy_Plane_WPF
                 RenderTransform = Rotation,
             };
 
-            ShowHitboxes = false;
+            ShowHitBoxes = false;
 
             X = 20;
             Y = START_POSITION;
 
             Speed = 1;
 
-            idleSprite.Loaded += (sender, e) =>
+            GraphicsController.CurrentSkin.IdleSprite.Loaded += (sender, e) =>
             {
                 SetSpriteRatio();
             };
 
-            Image jumpSprite = new()
-            {
-                Source = new BitmapImage(new Uri(@"Resources\player_AB.png", UriKind.Relative))
-            };
-
-            Sprites.Add(new() { Visual = jumpSprite });
+            Sprites.Add(new() { Visual = GraphicsController.CurrentSkin.JumpSprite });
         }
 
         public void Draw()

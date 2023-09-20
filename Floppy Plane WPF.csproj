@@ -12,6 +12,8 @@
     <None Remove="Resources\icon.png" />
     <None Remove="Resources\missile.png" />
     <None Remove="Resources\player.png" />
+    <None Remove="Resources\PlayerSkins\player.png" />
+    <None Remove="Resources\PlayerSkins\player_AB.png" />
     <None Remove="Resources\player_AB.png" />
     <None Remove="Resources\test.png" />
     <None Remove="Resources\testAB.png" />
@@ -23,6 +25,12 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Resources\player.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Resources\PlayerSkins\Default\player.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Resources\PlayerSkins\Default\player_AB.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </EmbeddedResource>
     <EmbeddedResource Include="Resources\player_AB.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
@@ -37,6 +45,15 @@
     <Resource Include="Resources\icon.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Resource>
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="Resources\PlayerSkins\Camo\player.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Resources\PlayerSkins\Camo\player_AB.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
 
 </Project>

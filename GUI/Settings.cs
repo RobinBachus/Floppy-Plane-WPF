@@ -10,17 +10,17 @@ namespace Floppy_Plane_WPF.GUI
         public static void SetSettingEventHandlers(AnimationController animationController, Player player, MainWindow mainWindow)
         {
             Sliders sliders = new(animationController, mainWindow);
-            Checkboxes checkboxes = new(animationController, player, mainWindow);
+            CheckBoxes checkboxes = new(animationController, player, mainWindow);
 
             mainWindow.LevelTimeSlider.ValueChanged += sliders.LevelTimeSlider_ValueChanged;
             mainWindow.SpeedSlider.ValueChanged += sliders.SpeedSlider_ValueChanged;
 
-            mainWindow.AdvancedOptionsCheckbox.Click += checkboxes.AdvancedOptionsCheckbox_Click;
+            mainWindow.AdvancedOptionsCheckbox.Click += checkboxes.AdvancedOptionsCheckBox_Click;
             mainWindow.SafeDistanceSlider.ValueChanged += sliders.SafeDistanceSlider_ValueChanged;
             mainWindow.GravityStrenghtSlider.ValueChanged += sliders.GravityStrengthSlider_ValueChanged;
 
-            mainWindow.ShowHitboxCheckbox.Click += checkboxes.ShowHitboxCheckbox_Click;
-            mainWindow.DisplayFpsCheckbox.Click += checkboxes.DisplayFpsCheckbox_Click;
+            mainWindow.ShowHitboxCheckbox.Click += checkboxes.ShowHitBoxCheckBox_Click;
+            mainWindow.DisplayFpsCheckbox.Click += checkboxes.DisplayFpsCheckBox_Click;
         }
 
         private class Sliders
@@ -59,32 +59,32 @@ namespace Floppy_Plane_WPF.GUI
             }
         }
 
-        private class Checkboxes
+        private class CheckBoxes
         {
             private AnimationController AnimationController { get; set; }
             private Player Player { get; set; }
             private MainWindow Window { get; set; }
 
-            public Checkboxes(AnimationController animationController, Player player, MainWindow mainWindow)
+            public CheckBoxes(AnimationController animationController, Player player, MainWindow mainWindow)
             {
                 AnimationController = animationController;
                 Player = player;
                 Window = mainWindow;
             }
 
-            public void AdvancedOptionsCheckbox_Click(object sender, RoutedEventArgs e)
+            public void AdvancedOptionsCheckBox_Click(object sender, RoutedEventArgs e)
             {
                 ToggleVisibility(Window.AdvancedSettings, Window.AdvancedOptionsCheckbox.IsChecked);
             }
 
-            public void ShowHitboxCheckbox_Click(object sender, RoutedEventArgs e)
+            public void ShowHitBoxCheckBox_Click(object sender, RoutedEventArgs e)
             {
                 AnimationController.ShowHitBoxes = Window.ShowHitboxCheckbox.IsChecked ?? false;
-                Player.ShowHitboxes = Window.ShowHitboxCheckbox.IsChecked ?? false;
+                Player.ShowHitBoxes = Window.ShowHitboxCheckbox.IsChecked ?? false;
                 Player.Draw();
             }
 
-            public void DisplayFpsCheckbox_Click(object sender, RoutedEventArgs e)
+            public void DisplayFpsCheckBox_Click(object sender, RoutedEventArgs e)
             {
                 ToggleVisibility(Window.FpsDisplay, Window.DisplayFpsCheckbox.IsChecked);
             }
