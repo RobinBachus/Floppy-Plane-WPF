@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Windows.Controls;
+using System.Windows.Media;
 using System.Windows.Media.Imaging;
 
 namespace Floppy_Plane_WPF.GameObjects
@@ -7,8 +8,8 @@ namespace Floppy_Plane_WPF.GameObjects
     internal class Skin
     {
         public string Name { get; } 
-        public Image IdleImage {  get; }
-        public Image JumpImage { get; }
+        public VisualBrush IdleBrush { get; }
+        public VisualBrush JumpBrush { get; }
 
         public Skin(string sourceDir)
         {
@@ -16,18 +17,10 @@ namespace Floppy_Plane_WPF.GameObjects
             Name = sourceDir[(sourceDir.LastIndexOf("/")+1)..];
 
             BitmapImage idleSource = new (new Uri($"{sourceDir}/player.png", UriKind.Absolute));
-            IdleImage = new() { Source = idleSource };
+            IdleBrush = new() { Visual = new Image() { Source = idleSource } };
 
             BitmapImage jumpSource = new(new Uri($"{sourceDir}/player_AB.png", UriKind.Absolute));
-            JumpImage = new() { Source = jumpSource };
+            JumpBrush = new() { Visual = new Image() { Source = jumpSource } };
         }
-
-        //private void SetSpriteRatio()
-        //{
-        //    VisualBrush _sprite = (VisualBrush)Sprite.Fill;
-        //    Image _image = (Image)_sprite.Visual;
-        //    double ratio = _image.ActualHeight / _image.ActualWidth;
-        //    Sprite.Height = Sprite.Width * ratio;
-        //}
     }
 }

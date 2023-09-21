@@ -21,7 +21,7 @@ namespace Floppy_Plane_WPF
         private List<Enemy> Enemies { get; }
         private AnimationController AnimationController { get; }
         private Menu MenuController { get; }
-        private SoundPlayer SoundPlayer { get; }
+        // private SoundPlayer SoundPlayer { get; }
 
         public MainWindow()
         {
@@ -33,9 +33,9 @@ namespace Floppy_Plane_WPF
             MenuController = new(this);
             Settings.AddSettingEventHandlers(AnimationController, Player, this);
 
-            SoundPlayer = new(Path.GetFullPath("Resources\\Sounds\\Engine.wav"));
-            SoundPlayer.LoadCompleted += (x, args) => { SoundPlayer.Play(); };
-            SoundPlayer.Load();
+            //SoundPlayer = new(Path.GetFullPath("Resources\\Sounds\\Engine.wav"));
+            //SoundPlayer.LoadCompleted += (x, args) => { SoundPlayer.Play(); };
+            //SoundPlayer.Load();
 
             Fps = new FpsCounter(FpsDisplay);
 

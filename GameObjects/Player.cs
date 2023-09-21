@@ -27,12 +27,13 @@ namespace Floppy_Plane_WPF
         private RotateTransform Rotation { get => GraphicsController.Rotation; }
 
         private const int START_HEIGHT = 200;
- 
+        private const int START_LEFT_MARGIN = 20;
+
         public Player(Canvas canvas)
         {
             Frame = canvas;
 
-            X = 20;
+            X = START_LEFT_MARGIN;
             Y = START_HEIGHT;
             Speed = 1;
 
@@ -62,6 +63,37 @@ namespace Floppy_Plane_WPF
             else HitFloor = true;
         }
 
+        public void MoveTo(int x, int y, int? stepX = null, int? stepY = null)
+        {
+            _dest_x = x;
+            _dest_y = y;
+
+            _step_x = stepX ?? (_dest_x - X) / 5;
+            _step_y = stepY ?? (_dest_y - Y) / 5;
+        }
+
+        public void MoveToX(int x) => MoveTo(x, Y);
+        public void MoveToY(int y) => MoveTo(X, y);
+
+        private int? _dest_x;
+        private int? _dest_y;
+
+        private int? _step_x;
+        private int? _step_y;
+
+        private void _UpdateMove()
+        {
+            if (_dest_x != null && X - _step_x >= _step_x)
+                X += _step_x ?? 0;
+            else if (_dest_x != null && X - _step_x < _step_x)
+                _dest_x = null;
+
+            if (_dest_y != null && Y -  _step_y >= _step_y)
+                Y += _step_y ?? 0;
+            else if (_dest_y != null && Y - _step_y < _step_y)
+                _dest_y = null;
+        }
+
         public void Jump()
         {
             if (Y + Sprite.Height > Sprite.Height*2) 
@@ -71,6 +103,7 @@ namespace Floppy_Plane_WPF
 
         public void SetToStartPosition()
         {
+            X = START_LEFT_MARGIN;
             Y = START_HEIGHT;
             HitFloor = false;
             Rotation.Angle = 0;

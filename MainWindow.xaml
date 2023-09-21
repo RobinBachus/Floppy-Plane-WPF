@@ -12,7 +12,7 @@
     <Grid>
         <Label x:Name="FpsDisplay" Panel.ZIndex="1000" HorizontalAlignment="Left" Width="120" Height="30" VerticalAlignment="Top" Foreground="#FF000296" Visibility="Collapsed"/>
 
-        <Grid x:Name="Menu" Panel.ZIndex="999" Visibility="Visible">
+        <Grid x:Name="Menu" Panel.ZIndex="999" Visibility="Collapsed">
             <Label Content="FLOPPY  PLANE" Margin="44,28,0,0" VerticalAlignment="Top" FontSize="56" Foreground="#FF000296" HorizontalAlignment="Left" FontFamily="Papyrus" FontWeight="Bold"/>
             <Label Content="press space to start !" VerticalAlignment="Top" FontSize="25" Foreground="#FFFF7500" HorizontalAlignment="Left" FontFamily="Papyrus" FontWeight="Bold" Margin="501,214,0,0" RenderTransformOrigin="0.5,0.5">
                 <Label.RenderTransform>
@@ -83,6 +83,13 @@
                     </CheckBox.RenderTransform>
                 </CheckBox>
             </Grid>
+        </Grid>
+
+        <Grid x:Name="SkinMenu" Panel.ZIndex="999" Visibility="Visible">
+            <Label Content="SKINS" FontSize="48" FontFamily="Bahnschrift SemiBold" Foreground="#FF0500A7" Background="Transparent" HorizontalAlignment="Left" Canvas.Left="587" Canvas.Top="10" VerticalAlignment="Top" Margin="32,15,0,0"/>
+            <Canvas Margin="83,159,83,159" Background="AliceBlue"></Canvas>
+            <Label x:Name="SkinNextButton" Content=">" Margin="0,0,40,0" FontSize="48" Foreground="#FF000296" FontFamily="Cascadia Code" Cursor="Hand" HorizontalAlignment="Right" Width="38" Height="66" VerticalAlignment="Center"/>
+            <Label x:Name="SkinPrevButton" Content="&lt;" Margin="45,0,0,0" FontSize="48" Foreground="#FF000296" FontFamily="Cascadia Code" Cursor="Hand" HorizontalAlignment="Left" Width="38" Height="66" VerticalAlignment="Center"/>
         </Grid>
 
         <Grid x:Name="GameUI" Panel.ZIndex="10" Visibility="Collapsed">

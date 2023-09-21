@@ -8,55 +8,22 @@
     <UseWPF>true</UseWPF>
   </PropertyGroup>
 
-  <ItemGroup>
-    <None Remove="Resources\icon.png" />
-    <None Remove="Resources\missile.png" />
-    <None Remove="Resources\player.png" />
-    <None Remove="Resources\PlayerSkins\Camo\player.png" />
-    <None Remove="Resources\PlayerSkins\Camo\player_AB.png" />
-    <None Remove="Resources\PlayerSkins\player.png" />
-    <None Remove="Resources\PlayerSkins\player_AB.png" />
-    <None Remove="Resources\player_AB.png" />
-    <None Remove="Resources\Sounds\Engine.wav" />
-    <None Remove="Resources\test.png" />
-    <None Remove="Resources\testAB.png" />
+  <ItemGroup Label="Resources">
+	  <Resource Include="Resources\icon.png">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+	  </Resource>	  
   </ItemGroup>
 
-  <ItemGroup>
-    <EmbeddedResource Include="Resources\missile.png">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Resources\player.png">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Resources\PlayerSkins\Default\player.png">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Resources\PlayerSkins\Default\player_AB.png">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Resources\player_AB.png">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Resources\Sounds\Engine.wav">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </EmbeddedResource>
-  </ItemGroup>
+	<ItemGroup Label="EmbeddedResources">
+		<EmbeddedResource Include="Resources\**\*">
+			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</EmbeddedResource>
+	</ItemGroup>
 
-  <ItemGroup>
-    <PackageReference Include="WpfAnimatedGif" Version="2.0.2" />
+  <ItemGroup Label="ExcludedResources">
+	  <Resource Include="Resources\README.md">
+		  <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+	  </Resource>
   </ItemGroup>
-
-  <ItemGroup>
-    <Resource Include="Resources\icon.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Resource>
-    <EmbeddedResource Include="Resources\PlayerSkins\Camo\player.png">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Resources\PlayerSkins\Camo\player_AB.png">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </EmbeddedResource>
-  </ItemGroup>
-
+	
 </Project>

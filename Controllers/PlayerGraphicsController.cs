@@ -30,8 +30,8 @@ namespace Floppy_Plane_WPF.Controllers
         private int CurrentSkinIndex { get; set; } = 0;
         private bool HasJumpSkin { get; set; } = false;
 
-        private VisualBrush IdleBrush { get => new() { Visual = CurrentSkin.IdleImage }; }
-        private VisualBrush JumpBrush { get => new() { Visual = CurrentSkin.JumpImage }; }
+        private VisualBrush IdleBrush { get => CurrentSkin.IdleBrush; }
+        private VisualBrush JumpBrush { get => CurrentSkin.JumpBrush; }
         private Skin CurrentSkin { get => Skins[CurrentSkinIndex]; }
 
 
@@ -59,7 +59,7 @@ namespace Floppy_Plane_WPF.Controllers
                 RenderTransform = Rotation
             };
 
-            CurrentSkin.IdleImage.Loaded += (sender, e) => SetSpriteRatio();
+            ((Image)CurrentSkin.IdleBrush.Visual).Loaded += (sender, e) => SetSpriteRatio();
         }
 
         public void AdjustSprite()
