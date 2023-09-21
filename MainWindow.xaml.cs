@@ -21,6 +21,7 @@ namespace Floppy_Plane_WPF
         private List<Enemy> Enemies { get; }
         private AnimationController AnimationController { get; }
         private Menu MenuController { get; }
+        private SkinSelection SkinSelectionPage { get; }
         // private SoundPlayer SoundPlayer { get; }
 
         public MainWindow()
@@ -32,6 +33,9 @@ namespace Floppy_Plane_WPF
             AnimationController = new(Player, Frame, GameUI, GameOverScreen, Enemies);
             MenuController = new(this);
             Settings.AddSettingEventHandlers(AnimationController, Player, this);
+
+            SkinSelectionPage = new(this, Player.GraphicsController);
+            SkinSelectionPage.Show();
 
             //SoundPlayer = new(Path.GetFullPath("Resources\\Sounds\\Engine.wav"));
             //SoundPlayer.LoadCompleted += (x, args) => { SoundPlayer.Play(); };

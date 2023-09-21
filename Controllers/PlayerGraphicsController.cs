@@ -8,7 +8,7 @@ using System.Windows.Shapes;
 
 namespace Floppy_Plane_WPF.Controllers
 {
-    internal class PlayerGraphicsController
+    public class PlayerGraphicsController
     {
         public Rectangle Sprite { get; }
         public RotateTransform Rotation { get; } = new(0);
@@ -84,6 +84,11 @@ namespace Floppy_Plane_WPF.Controllers
         {
             CurrentSkinIndex = (CurrentSkinIndex + Skins.Count - 1) % Skins.Count;
         }
+
+        //public void SetSprite(int spriteIndex)
+        //{
+        //    CurrentSkinIndex = spriteIndex;
+        //}
 
         private void SetSpriteRatio()
         {

@@ -12,6 +12,7 @@ namespace Floppy_Plane_WPF
         public int Y { get; private set; }
         public double Speed { get; private set; }
         public bool HitFloor { get; private set; }
+        public PlayerGraphicsController GraphicsController { get; }
 
         public Rectangle Sprite { get => GraphicsController.Sprite; }
         public bool IsJumping { get => Speed < 0; }
@@ -22,8 +23,6 @@ namespace Floppy_Plane_WPF
         }
 
         private Canvas Frame { get; }
-        private PlayerGraphicsController GraphicsController { get; }
-
         private RotateTransform Rotation { get => GraphicsController.Rotation; }
 
         private const int START_HEIGHT = 200;
