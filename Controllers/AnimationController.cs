@@ -14,11 +14,11 @@ namespace Floppy_Plane_WPF.Controllers
         private List<Enemy> Enemies { get; }
         private int EnemyCount { get; set; }
         private Canvas Frame { get; }
-        private Grid UI { get; }
+        private Grid Ui { get; }
         private Grid GameOverScreen { get; }
         private Random Random { get; }
 
-        public bool CanRespawn { get; private set; }
+        public bool CanReSpawn { get; private set; }
 
         public bool Started { get; set; }
         public int Level { get; set; }
@@ -51,15 +51,15 @@ namespace Floppy_Plane_WPF.Controllers
         /// <param name="callback">The <see cref="Action"/> to execute</param>
         private static void Invoke(Action callback) => Application.Current.Dispatcher.Invoke(callback);
 
-        public AnimationController(Player player, Canvas canvas, Grid GameUI, Grid gameOverScreen, List<Enemy> enemies)
+        public AnimationController(Player player, Canvas canvas, Grid gameUi, Grid gameOverScreen, List<Enemy> enemies)
         {
             Player = player;
             Frame = canvas;
-            UI = GameUI;
+            Ui = gameUi;
             GameOverScreen = gameOverScreen;
             Enemies = enemies;
 
-            CanRespawn = true;
+            CanReSpawn = true;
 
             Random = new Random();
             Started = false;
@@ -68,15 +68,15 @@ namespace Floppy_Plane_WPF.Controllers
             ShowHitBoxes = false;
             SafeDistance = 300;
 
-            FrameUpdateTimer = new() { Interval = TimeSpan.FromMilliseconds(20) };
-            EnemyTimer = new() { Interval = TimeSpan.FromMilliseconds(1) };
-            LevelTimer = new() { Interval = TimeSpan.FromSeconds(5) };
-            DeathDelayTimer = new() { Interval = TimeSpan.FromSeconds(.5) };
+            FrameUpdateTimer = new DispatcherTimer { Interval = TimeSpan.FromMilliseconds(20) };
+            EnemyTimer = new DispatcherTimer { Interval = TimeSpan.FromMilliseconds(1) };
+            LevelTimer = new DispatcherTimer { Interval = TimeSpan.FromSeconds(5) };
+            DeathDelayTimer = new DispatcherTimer { Interval = TimeSpan.FromSeconds(.5) };
 
             FrameUpdateTimer.Tick += Timer_PlayerMove;
-            EnemyTimer.Tick += (sender, args) => Task.Run(Timer_AttemptSpawnEnemy);
-            EnemyTimer.Tick += (sender, args) => Task.Run(Timer_CheckCollision);
-            LevelTimer.Tick += (sender, args) => Task.Run(() => Invoke(() => SetLevel(++Level)));
+            EnemyTimer.Tick += delegate { Task.Run(Timer_AttemptSpawnEnemy); };
+            EnemyTimer.Tick += delegate { Task.Run(Timer_CheckCollision); };
+            LevelTimer.Tick += delegate { Task.Run(() => Invoke(() => SetLevel(++Level))); };
             DeathDelayTimer.Tick += Timer_DeathDelay;
         }
 
@@ -94,11 +94,11 @@ namespace Floppy_Plane_WPF.Controllers
             GameOverScreen.Visibility = Visibility.Hidden;
         }
 
-        void Timer_PlayerMove(object? sender, EventArgs e)
+        private void Timer_PlayerMove(object? sender, EventArgs e)
         {
             Player.MovePlayer();
             // Move enemies and check if any have left the screen
-            List<Enemy> toRemove = Enemies.FindAll((enemy) =>
+            var toRemove = Enemies.FindAll(enemy =>
             {
                 enemy.Move();
                 return enemy.X <= 0 + 25 - Enemy.BaseWidth;
@@ -116,52 +116,49 @@ namespace Floppy_Plane_WPF.Controllers
         private void Timer_AttemptSpawnEnemy()
         {
             // Has a random chance to spawn an enemy on every tick
-            if (Random.Next(25) == 10 || Enemies.Count == 0)
-            {
-                int yPos = Random.Next((int)(Frame.ActualHeight - Enemy.BaseHeight));
-                if (!IsSafeDistace(yPos)) return;
-                Invoke(() => Enemies.Add(new(Frame, ++EnemyCount, yPos, Level, SpeedIncreaseValue, ShowHitBoxes)));
-            }
+            if (Random.Next(25) != 10 && Enemies.Count != 0) return;
+            int yPos = Random.Next((int)(Frame.ActualHeight - Enemy.BaseHeight));
+            if (!IsSafeDistance(yPos)) return;
+            Invoke(() => Enemies.Add(new Enemy(Frame, ++EnemyCount, yPos, Level, SpeedIncreaseValue, ShowHitBoxes)));
         }
 
         private void Timer_CheckCollision()
         {
             // Check if player has lost
-            if (EnemyHit() || Player.HitFloor)
+            if (!EnemyHit() && !Player.HitFloor) return;
+
+            // Stop timers
+            FrameUpdateTimer.Stop();
+            EnemyTimer.Stop();
+            LevelTimer.Stop();
+
+            DeathDelayTimer.Start();
+            CanReSpawn = false;
+
+            Started = false;
+
+            Invoke(() =>
             {
-                // Stop timers
-                FrameUpdateTimer.Stop();
-                EnemyTimer.Stop();
-                LevelTimer.Stop();
-
-                DeathDelayTimer.Start();
-                CanRespawn = false;
-
-                Started = false;
-
-                Invoke(() =>
-                {
-                    // Clear items on screen
-                    Enemies.Clear();
-                    Frame.Children.Clear();
-                    // Show Game Over screen
-                    GameOverScreen.Visibility = Visibility.Visible;
-                });
-            }
+                // Clear items on screen
+                Enemies.Clear();
+                Frame.Children.Clear();
+                // Show Game Over screen
+                GameOverScreen.Visibility = Visibility.Visible;
+            });
         }
 
         private void Timer_DeathDelay(object? sender, EventArgs e)
         {
             DeathDelayTimer.Stop();
-            CanRespawn = true;
+            CanReSpawn = true;
         }
 
-        private bool IsSafeDistace(int yPosition)
+        private bool IsSafeDistance(int yPosition)
         {
-            for (int i = 1; i < 2; i++)
+            for (var i = 1; i < 2; i++)
             {
                 if (i > Enemies.Count) break;
-                Enemy toTest = Enemies[^i];
+                var toTest = Enemies[^i];
                 double xDistance = Frame.ActualWidth - toTest.X;
                 double yDistance = yPosition - toTest.Y;
                 double distance = Math.Sqrt(Math.Pow(xDistance, 2) + Math.Pow(yDistance, 2));
@@ -174,7 +171,7 @@ namespace Floppy_Plane_WPF.Controllers
         private bool EnemyHit()
         {
             Rect player = new(Player.X, Player.Y, Player.Sprite.ActualWidth, Player.Sprite.ActualHeight);
-            foreach (Enemy enemy in Enemies)
+            foreach (var enemy in Enemies)
             {
                 Rect en = new(enemy.X, enemy.Y, enemy.Sprite.ActualWidth, enemy.Sprite.ActualHeight);
                 if (player.IntersectsWith(en)) return true;
@@ -185,8 +182,8 @@ namespace Floppy_Plane_WPF.Controllers
         private void SetLevel(int level)
         {
             Level = level;
-            UIElement _label = UI.Children[1];
-            if (_label is Label label && label.Name == "LevelIndicator") label.Content = $"{level}";
+            var label = Ui.Children[1];
+            if (label is Label { Name: "LevelIndicator" } levelIndicator) levelIndicator.Content = $"{level}";
             else throw new Exception("Could not find level indicator label");
         }
 

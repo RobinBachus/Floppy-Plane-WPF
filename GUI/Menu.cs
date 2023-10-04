@@ -5,7 +5,7 @@ namespace Floppy_Plane_WPF.GUI
 {
     internal class Menu
     {
-        private MainWindow MainWindow { get; set; }
+        private MainWindow MainWindow { get; }
 
         public Menu(MainWindow mainWindow)
         {
@@ -13,6 +13,8 @@ namespace Floppy_Plane_WPF.GUI
 
             MainWindow.SettingsButton.MouseDown += SettingsButton_Clicked;
             MainWindow.SettingsReturnButton.MouseDown += SettingsReturnButton_Clicked;
+            MainWindow.SkinSelectionButton.MouseDown += SkinSelectionButton_Click;
+            MainWindow.SkinReturnButton.MouseDown += SkinReturnButton_Click;
             MainWindow.GameOverMenuButton.Click += GameOverMenuButton_Click;
         }
 
@@ -45,6 +47,19 @@ namespace Floppy_Plane_WPF.GUI
             MainWindow.GameOverScreen.Visibility = Visibility.Collapsed;
             MainWindow.Frame.Focus();
             MainWindow.Player.SetToStartPosition();
+        }
+
+        private void SkinSelectionButton_Click(object sender, RoutedEventArgs e)
+        {
+            SetMenuVisibility(Visibility.Collapsed);
+            MainWindow.SkinSelectionPage.Show();
+        }
+
+        private void SkinReturnButton_Click(object sender, RoutedEventArgs e)
+        {
+            SetMenuVisibility(Visibility.Visible);
+            MainWindow.SkinSelectionPage.Hide();
+            MainWindow.Frame.Focus();
         }
     }
 }

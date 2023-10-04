@@ -1,21 +1,23 @@
-﻿using Floppy_Plane_WPF.Controllers;
-using System;
+﻿using System;
 using System.Windows.Controls;
 using System.Windows.Media;
 using System.Windows.Shapes;
+using Floppy_Plane_WPF.Controllers;
 
-namespace Floppy_Plane_WPF
+namespace Floppy_Plane_WPF.GameObjects
 {
     public class Player
     {
         public int X { get; private set; }
         public int Y { get; private set; }
-        public double Speed { get; private set; }
         public bool HitFloor { get; private set; }
         public PlayerGraphicsController GraphicsController { get; }
 
-        public Rectangle Sprite { get => GraphicsController.Sprite; }
-        public bool IsJumping { get => Speed < 0; }
+        public double GravityMultiplier { get; set; }
+
+        public Rectangle Sprite => GraphicsController.Sprite;
+        public bool IsJumping => Speed < 0;
+
         public bool ShowHitBoxes 
         {
             get => GraphicsController.ShowHitBoxes; 
@@ -23,7 +25,9 @@ namespace Floppy_Plane_WPF
         }
 
         private Canvas Frame { get; }
-        private RotateTransform Rotation { get => GraphicsController.Rotation; }
+        private RotateTransform Rotation => GraphicsController.Rotation;
+
+        private double Speed {  get; set; }
 
         private const int START_HEIGHT = 200;
         private const int START_LEFT_MARGIN = 20;
@@ -38,6 +42,7 @@ namespace Floppy_Plane_WPF
 
             GraphicsController = new PlayerGraphicsController(this);
             ShowHitBoxes = false;
+            GravityMultiplier = 1;
         }
 
         public void Draw()
@@ -50,52 +55,21 @@ namespace Floppy_Plane_WPF
 
         public void MovePlayer()
         {
-            if (Y+Sprite.Height < Frame.ActualHeight - 25) 
+            if (Y + Sprite.ActualHeight < Frame.ActualHeight - 25) 
             {
                 Y += Convert.ToInt32(Math.Floor(Speed));
                 Draw();
-                if (Speed < 15) Speed += 1;
+                if (Speed < 15) Speed += 1 * GravityMultiplier;
 
-                Rotation.Angle = Speed * .5;
+                Rotation.Angle = Speed * .75;
                 GraphicsController.AdjustSprite();
             }
             else HitFloor = true;
         }
 
-        public void MoveTo(int x, int y, int? stepX = null, int? stepY = null)
-        {
-            _dest_x = x;
-            _dest_y = y;
-
-            _step_x = stepX ?? (_dest_x - X) / 5;
-            _step_y = stepY ?? (_dest_y - Y) / 5;
-        }
-
-        public void MoveToX(int x) => MoveTo(x, Y);
-        public void MoveToY(int y) => MoveTo(X, y);
-
-        private int? _dest_x;
-        private int? _dest_y;
-
-        private int? _step_x;
-        private int? _step_y;
-
-        private void _UpdateMove()
-        {
-            if (_dest_x != null && X - _step_x >= _step_x)
-                X += _step_x ?? 0;
-            else if (_dest_x != null && X - _step_x < _step_x)
-                _dest_x = null;
-
-            if (_dest_y != null && Y -  _step_y >= _step_y)
-                Y += _step_y ?? 0;
-            else if (_dest_y != null && Y - _step_y < _step_y)
-                _dest_y = null;
-        }
-
         public void Jump()
         {
-            if (Y + Sprite.Height > Sprite.Height*2) 
+            if (Y + Sprite.ActualHeight > Sprite.ActualHeight / 2) 
                 // Regular jump is -10 and double jump is -15
                 Speed = (Speed >= 0) ? -10 : -15;
         }

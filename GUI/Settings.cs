@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Windows;
 using Floppy_Plane_WPF.Controllers;
+using Floppy_Plane_WPF.GameObjects;
 
 namespace Floppy_Plane_WPF.GUI
 {
@@ -8,7 +9,7 @@ namespace Floppy_Plane_WPF.GUI
     {
         public static void AddSettingEventHandlers(AnimationController animationController, Player player, MainWindow mainWindow)
         {
-            Sliders sliders = new(animationController, mainWindow);
+            Sliders sliders = new(animationController, mainWindow, player);
             CheckBoxes checkboxes = new(animationController, player, mainWindow);
 
             mainWindow.LevelTimeSlider.ValueChanged += sliders.LevelTimeSlider_ValueChanged;
@@ -24,13 +25,15 @@ namespace Floppy_Plane_WPF.GUI
 
         private class Sliders
         {
-            private AnimationController AnimationController { get; set; }
-            private MainWindow Window { get; set; }
+            private AnimationController AnimationController { get; }
+            private MainWindow Window { get; }
+            private Player Player { get; }
 
-            public Sliders(AnimationController animationController, MainWindow mainWindow)
+            public Sliders(AnimationController animationController, MainWindow mainWindow, Player player)
             {
                 AnimationController = animationController;
                 Window = mainWindow;
+                Player = player;
             }
 
             public void LevelTimeSlider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
@@ -54,7 +57,9 @@ namespace Floppy_Plane_WPF.GUI
             // TODO: GravityStrengthSlider implementation
             public void GravityStrengthSlider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
             {
-                Window.GravityStrenghtValue.Content = $"{Convert.ToInt32(e.NewValue)}px";
+                double value = Math.Round(e.NewValue, 1);
+                Window.GravityStrenghtValue.Content = $"{value}g";
+                Player.GravityMultiplier = value;
             }
         }
 
@@ -92,7 +97,7 @@ namespace Floppy_Plane_WPF.GUI
 
         private static void ToggleVisibility(UIElement element, bool? isChecked = false)
         {
-            Visibility visibility = isChecked ?? false ? Visibility.Visible : Visibility.Collapsed;
+            var visibility = isChecked ?? false ? Visibility.Visible : Visibility.Collapsed;
             element.Visibility = visibility;
         }
     }

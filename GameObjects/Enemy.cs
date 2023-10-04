@@ -9,11 +9,11 @@ namespace Floppy_Plane_WPF.GameObjects
     internal class Enemy
     {
         private Canvas Frame { get; }
-        public Rectangle Sprite { get; private set; }
+        public Rectangle Sprite { get; }
 
         public int X { get; private set; }
-        public int Y { get; private set; }
-        public int Level { get; private set; }
+        public int Y { get; }
+        public int Level { get; }
 
         public const int BaseSpeed = 10;
         public const int BaseHeight = 40;
@@ -22,21 +22,22 @@ namespace Floppy_Plane_WPF.GameObjects
         /** <summary> Value that the level is multiplied with to get the speed of the enemy </summary> */
         private int SpeedIncreaseValue { get; }
 
-        public Enemy(Canvas canvas, int id, int yPosition, int level, int speedIncreaseValue, bool showHitbox)
+        private const string TEXTURE_PATH = @"Resources\missile.png";
+
+        public Enemy(Canvas canvas, int id, int yPosition, int level, int speedIncreaseValue, bool showHitBox)
         {
             VisualBrush visualBrush = new();
 
-            string path = @"Resources\missile.png";
 
             Image image = new()
             {
-                Source = new BitmapImage(new Uri(path, UriKind.Relative))
+                Source = new BitmapImage(new Uri(TEXTURE_PATH, UriKind.Relative))
             };
 
             visualBrush.Visual = image;
 
             Frame = canvas;
-            Sprite = new()
+            Sprite = new Rectangle
             {
                 Name = $"Enemy{id}",
                 Height = BaseHeight,
@@ -44,12 +45,12 @@ namespace Floppy_Plane_WPF.GameObjects
                 Fill = visualBrush,
             };
 
-            if (showHitbox) Sprite.Stroke = Brushes.Red;
+            if (showHitBox) Sprite.Stroke = Brushes.Red;
 
             X = (int)Frame.ActualWidth;
             Y = yPosition;
 
-            image.Loaded += (sender, e) =>
+            image.Loaded += delegate
             {
                 double ratio = image.ActualHeight / image.ActualWidth;
                 Sprite.Height = Sprite.Width * ratio;

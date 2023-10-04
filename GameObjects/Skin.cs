@@ -14,13 +14,13 @@ namespace Floppy_Plane_WPF.GameObjects
         public Skin(string sourceDir)
         {
             sourceDir = System.IO.Path.GetFullPath(sourceDir).Replace("\\", "/");
-            Name = sourceDir[(sourceDir.LastIndexOf("/")+1)..];
+            Name = sourceDir[(sourceDir.LastIndexOf("/", StringComparison.Ordinal)+1)..];
 
             BitmapImage idleSource = new (new Uri($"{sourceDir}/player.png", UriKind.Absolute));
-            IdleBrush = new() { Visual = new Image() { Source = idleSource } };
+            IdleBrush = new VisualBrush { Visual = new Image() { Source = idleSource } };
 
             BitmapImage jumpSource = new(new Uri($"{sourceDir}/player_AB.png", UriKind.Absolute));
-            JumpBrush = new() { Visual = new Image() { Source = jumpSource } };
+            JumpBrush = new VisualBrush { Visual = new Image() { Source = jumpSource } };
         }
     }
 }

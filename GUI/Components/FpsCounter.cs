@@ -1,6 +1,6 @@
-﻿using System.Windows.Threading;
-using System;
+﻿using System;
 using System.Windows.Controls;
+using System.Windows.Threading;
 
 namespace Floppy_Plane_WPF.GUI.Components
 {
@@ -9,28 +9,28 @@ namespace Floppy_Plane_WPF.GUI.Components
         private DispatcherTimer TickTimer { get; } = new() { Interval = TimeSpan.FromMilliseconds(1) };
         private DispatcherTimer UpdateTimer { get; } = new() { Interval = TimeSpan.FromSeconds(1) };
 
-        private int Updates { get; set; } = 0;
+        private int Updates { get; set; }
 
-        public int FPS { get; private set; } = 0;
+        public int Fps { get; private set; }
 
         public FpsCounter()
         {
-            TickTimer.Tick += (s, e) => Updates++;
-            UpdateTimer.Tick += (s, e) => UpdateFPS();
+            TickTimer.Tick += delegate { Updates++; };
+            UpdateTimer.Tick += delegate { UpdateFps(); };
 
             TickTimer.Start();
             UpdateTimer.Start();
         }
 
-        public FpsCounter(Label FPSLabel) : this()
+        public FpsCounter(ContentControl fpsLabel) : this()
         {
-            FPSLabel.Content = "FPS: 0";
-            UpdateTimer.Tick += (s, e) => FPSLabel.Content = $"FPS: {FPS}";
+            fpsLabel.Content = "FPS: 0";
+            UpdateTimer.Tick += delegate { fpsLabel.Content = $"FPS: {Fps}"; };
         }
 
-        private void UpdateFPS()
+        private void UpdateFps()
         {
-            FPS = Updates;
+            Fps = Updates;
             Updates = 0;
         }
     }
