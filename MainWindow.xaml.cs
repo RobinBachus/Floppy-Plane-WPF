@@ -1,4 +1,5 @@
-﻿using Floppy_Plane_WPF.Controllers;
+﻿using Floppy_Plane_WPF.AudioUtils;
+using Floppy_Plane_WPF.Controllers;
 using Floppy_Plane_WPF.GameObjects;
 using Floppy_Plane_WPF.GUI;
 using Floppy_Plane_WPF.GUI.Components;
@@ -18,8 +19,7 @@ namespace Floppy_Plane_WPF
         private List<Enemy> Enemies { get; }
         private AnimationController AnimationController { get; }
         public SkinSelection SkinSelectionPage { get; }
-        // private Menu MenuController { get; }
-        // private SoundPlayer SoundPlayer { get; }
+        public MusicController MusicController { get; }
 
         public MainWindow()
         {
@@ -27,16 +27,13 @@ namespace Floppy_Plane_WPF
 
             Player = new Player(Frame);
             Enemies = new List<Enemy>();
-            AnimationController = new AnimationController(Player, Frame, GameUI, GameOverScreen, Enemies);
+            MusicController = new MusicController();
+            AnimationController = new AnimationController(Player, Frame, GameUi, GameOverScreen, Enemies, MusicController);
             SkinSelectionPage = new SkinSelection(this, Player.GraphicsController);
-            Settings.AddSettingEventHandlers(AnimationController, Player, this);
+            Settings.AddSettingEventHandlers(this, AnimationController, Player);
+            GUI.Menu.AddMenuEventListeners(this, MusicController);
 
-            // Adds menu related event listeners  
-            _ = new Menu(this);
-
-            //SoundPlayer = new(Path.GetFullPath("Resources\\Sounds\\Engine.wav"));
-            //SoundPlayer.LoadCompleted += (x, args) => { SoundPlayer.Play(); };
-            //SoundPlayer.Load();
+            MusicController.Play();
 
             Fps = new FpsCounter(FpsDisplay);
 
@@ -50,7 +47,7 @@ namespace Floppy_Plane_WPF
             {
                 AnimationController.StartPlayerAnimation();
                 Menu.Visibility = Visibility.Collapsed;
-                GameUI.Visibility = Visibility.Visible;
+                GameUi.Visibility = Visibility.Visible;
             }
             Player.Jump();
         }

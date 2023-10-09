@@ -1,22 +1,26 @@
-﻿using System;
+﻿using Floppy_Plane_WPF.AudioUtils;
+using Floppy_Plane_WPF.GameObjects;
+using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Threading;
-using Floppy_Plane_WPF.GameObjects;
 
 namespace Floppy_Plane_WPF.Controllers
 {
     internal class AnimationController
     {
-        private Player Player { get; }
-        private List<Enemy> Enemies { get; }
+        private readonly Player _player;
+        private readonly List<Enemy> _enemies;
+        private readonly Canvas _frame;
+        private readonly Grid _ui;
+        private readonly Grid _gameOverScreen;
+        private readonly Random _random;
+        private readonly MusicController _musicController;
+
         private int EnemyCount { get; set; }
-        private Canvas Frame { get; }
-        private Grid Ui { get; }
-        private Grid GameOverScreen { get; }
-        private Random Random { get; }
 
         public bool CanReSpawn { get; private set; }
 
@@ -26,20 +30,22 @@ namespace Floppy_Plane_WPF.Controllers
         public bool ShowHitBoxes { get; set; }
         public int SafeDistance { get; set; }
 
-
         /// <summary>
         /// Timer for the animations
         /// </summary>
         private DispatcherTimer FrameUpdateTimer { get; }
+
         /// <summary>
         /// Timer for enemy interactions such as spawning and collision detection
         /// </summary>
         private DispatcherTimer EnemyTimer { get; }
+
         /// <summary>
         /// Timer for increasing the level
         /// </summary>
         private DispatcherTimer LevelTimer { get; }
-        /// <summary> 
+
+        /// <summary>
         /// Allows for a short period of time between dying and being able to restart to avoid accidental restarts after dying
         /// </summary>
         private DispatcherTimer DeathDelayTimer { get; }
@@ -51,17 +57,18 @@ namespace Floppy_Plane_WPF.Controllers
         /// <param name="callback">The <see cref="Action"/> to execute</param>
         private static void Invoke(Action callback) => Application.Current.Dispatcher.Invoke(callback);
 
-        public AnimationController(Player player, Canvas canvas, Grid gameUi, Grid gameOverScreen, List<Enemy> enemies)
+        public AnimationController(Player player, Canvas canvas, Grid gameUi, Grid gameOverScreen, List<Enemy> enemies, MusicController musicController)
         {
-            Player = player;
-            Frame = canvas;
-            Ui = gameUi;
-            GameOverScreen = gameOverScreen;
-            Enemies = enemies;
+            _player = player;
+            _frame = canvas;
+            _ui = gameUi;
+            _gameOverScreen = gameOverScreen;
+            _enemies = enemies;
+            _musicController = musicController;
 
             CanReSpawn = true;
 
-            Random = new Random();
+            _random = new Random();
             Started = false;
             Level = 1;
             SpeedIncreaseValue = 3;
@@ -82,8 +89,7 @@ namespace Floppy_Plane_WPF.Controllers
 
         public void StartPlayerAnimation()
         {
-
-            Player.SetToStartPosition();
+            _player.SetToStartPosition();
             SetLevel(1);
 
             Started = true;
@@ -91,14 +97,16 @@ namespace Floppy_Plane_WPF.Controllers
             EnemyTimer.Start();
             LevelTimer.Start();
 
-            GameOverScreen.Visibility = Visibility.Hidden;
+            _player.GraphicsController.StartSound();
+
+            _gameOverScreen.Visibility = Visibility.Hidden;
         }
 
         private void Timer_PlayerMove(object? sender, EventArgs e)
         {
-            Player.MovePlayer();
+            _player.MovePlayer();
             // Move enemies and check if any have left the screen
-            var toRemove = Enemies.FindAll(enemy =>
+            var toRemove = _enemies.FindAll(enemy =>
             {
                 enemy.Move();
                 return enemy.X <= 0 + 25 - Enemy.BaseWidth;
@@ -107,25 +115,25 @@ namespace Floppy_Plane_WPF.Controllers
             // Remove the enemies that have left the screen
             toRemove.ForEach(enemy =>
             {
-                Frame.Children.Remove(enemy.Sprite);
-                Enemies.Remove(enemy);
-                Enemies.TrimExcess();
+                _frame.Children.Remove(enemy.Sprite);
+                _enemies.Remove(enemy);
+                _enemies.TrimExcess();
             });
         }
 
         private void Timer_AttemptSpawnEnemy()
         {
             // Has a random chance to spawn an enemy on every tick
-            if (Random.Next(25) != 10 && Enemies.Count != 0) return;
-            int yPos = Random.Next((int)(Frame.ActualHeight - Enemy.BaseHeight));
+            if (_random.Next(25) != 10 && _enemies.Count != 0) return;
+            int yPos = _random.Next((int)(_frame.ActualHeight - Enemy.BaseHeight));
             if (!IsSafeDistance(yPos)) return;
-            Invoke(() => Enemies.Add(new Enemy(Frame, ++EnemyCount, yPos, Level, SpeedIncreaseValue, ShowHitBoxes)));
+            Invoke(() => _enemies.Add(new Enemy(_frame, ++EnemyCount, yPos, Level, SpeedIncreaseValue, ShowHitBoxes)));
         }
 
         private void Timer_CheckCollision()
         {
             // Check if player has lost
-            if (!EnemyHit() && !Player.HitFloor) return;
+            if (!EnemyHit() && !_player.HitFloor) return;
 
             // Stop timers
             FrameUpdateTimer.Stop();
@@ -139,11 +147,14 @@ namespace Floppy_Plane_WPF.Controllers
 
             Invoke(() =>
             {
+                // Stop music and player audio
+                _musicController.Stop();
+                _player.GraphicsController.PlayDeathSound();
                 // Clear items on screen
-                Enemies.Clear();
-                Frame.Children.Clear();
+                _enemies.Clear();
+                _frame.Children.Clear();
                 // Show Game Over screen
-                GameOverScreen.Visibility = Visibility.Visible;
+                _gameOverScreen.Visibility = Visibility.Visible;
             });
         }
 
@@ -153,13 +164,19 @@ namespace Floppy_Plane_WPF.Controllers
             CanReSpawn = true;
         }
 
+        /// <summary>
+        /// Checks if an enemy spawn position is far away enough from the last 2 enemies.
+        /// This helps to keep distance between the enemies.
+        /// </summary>
+        /// <param name="yPosition">The position to test</param>
+        /// <returns>True if <paramref name="yPosition"/> is far enough from other enemies, else false</returns>
         private bool IsSafeDistance(int yPosition)
         {
             for (var i = 1; i < 2; i++)
             {
-                if (i > Enemies.Count) break;
-                var toTest = Enemies[^i];
-                double xDistance = Frame.ActualWidth - toTest.X;
+                if (i > _enemies.Count) break;
+                var toTest = _enemies[^i];
+                double xDistance = _frame.ActualWidth - toTest.X;
                 double yDistance = yPosition - toTest.Y;
                 double distance = Math.Sqrt(Math.Pow(xDistance, 2) + Math.Pow(yDistance, 2));
                 if (distance < SafeDistance) return false;
@@ -170,20 +187,16 @@ namespace Floppy_Plane_WPF.Controllers
 
         private bool EnemyHit()
         {
-            Rect player = new(Player.X, Player.Y, Player.Sprite.ActualWidth, Player.Sprite.ActualHeight);
-            foreach (var enemy in Enemies)
-            {
-                Rect en = new(enemy.X, enemy.Y, enemy.Sprite.ActualWidth, enemy.Sprite.ActualHeight);
-                if (player.IntersectsWith(en)) return true;
-            }
-            return false;
+            Rect player = new(_player.X, _player.Y, _player.Sprite.ActualWidth, _player.Sprite.ActualHeight);
+            return _enemies
+                .Select(enemy => new Rect(enemy.X, enemy.Y, enemy.Sprite.ActualWidth, enemy.Sprite.ActualHeight))
+                .Any(en => player.IntersectsWith(en));
         }
 
         private void SetLevel(int level)
         {
             Level = level;
-            var label = Ui.Children[1];
-            if (label is Label { Name: "LevelIndicator" } levelIndicator) levelIndicator.Content = $"{level}";
+            if (_ui.Children[1] is Label { Name: "LevelIndicator" } levelIndicator) levelIndicator.Content = $"{level}";
             else throw new Exception("Could not find level indicator label");
         }
 

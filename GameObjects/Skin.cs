@@ -10,6 +10,7 @@ namespace Floppy_Plane_WPF.GameObjects
         public string Name { get; } 
         public VisualBrush IdleBrush { get; }
         public VisualBrush JumpBrush { get; }
+        public Uri SoundFileUri { get; }
 
         public Skin(string sourceDir)
         {
@@ -21,6 +22,8 @@ namespace Floppy_Plane_WPF.GameObjects
 
             BitmapImage jumpSource = new(new Uri($"{sourceDir}/player_AB.png", UriKind.Absolute));
             JumpBrush = new VisualBrush { Visual = new Image() { Source = jumpSource } };
+
+            SoundFileUri = new Uri($"{sourceDir}/Engine.wav", UriKind.Absolute);
         }
     }
 }

@@ -1,8 +1,8 @@
-﻿using System;
+﻿using Floppy_Plane_WPF.Controllers;
+using System;
 using System.Windows.Controls;
 using System.Windows.Media;
 using System.Windows.Shapes;
-using Floppy_Plane_WPF.Controllers;
 
 namespace Floppy_Plane_WPF.GameObjects
 {
@@ -12,6 +12,7 @@ namespace Floppy_Plane_WPF.GameObjects
         public int Y { get; private set; }
         public bool HitFloor { get; private set; }
         public PlayerGraphicsController GraphicsController { get; }
+        public Canvas Frame { get; }
 
         public double GravityMultiplier { get; set; }
 
@@ -24,7 +25,6 @@ namespace Floppy_Plane_WPF.GameObjects
             set => GraphicsController.ShowHitBoxes = value;
         }
 
-        private Canvas Frame { get; }
         private RotateTransform Rotation => GraphicsController.Rotation;
 
         private double Speed {  get; set; }
@@ -63,6 +63,9 @@ namespace Floppy_Plane_WPF.GameObjects
 
                 Rotation.Angle = Speed * .75;
                 GraphicsController.AdjustSprite();
+
+                //double pitch = (Speed + 15) / 30 + 1;
+                //GraphicsController.SetAudioPitch(2.0);
             }
             else HitFloor = true;
         }

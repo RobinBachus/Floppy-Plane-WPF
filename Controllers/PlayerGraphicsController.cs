@@ -4,14 +4,15 @@ using System.IO;
 using System.Windows.Controls;
 using System.Windows.Media;
 using System.Windows.Shapes;
+using Floppy_Plane_WPF.AudioUtils;
 
 namespace Floppy_Plane_WPF.Controllers
 {
     public class PlayerGraphicsController
     {
         public Rectangle Sprite { get; }
-        public string CurrentSkinName => CurrentSkin.Name;
         public RotateTransform Rotation { get; } = new(0);
+        public string CurrentSkinName => CurrentSkin.Name;
 
         private bool _showHitboxes;
         public bool ShowHitBoxes
@@ -24,9 +25,9 @@ namespace Floppy_Plane_WPF.Controllers
             }
         }
 
-        // TODO: Move player graphics logic to PlayerGraphicsController
         private readonly Player _player;
-        private List<Skin> Skins { get; } = new List<Skin>();
+        private readonly SoundEffectCache _soundEffectCache;
+        private List<Skin> Skins { get; } = new();
         private int CurrentSkinIndex { get; set; }
         private bool HasJumpSkin { get; set; }
 
@@ -60,6 +61,8 @@ namespace Floppy_Plane_WPF.Controllers
             };
 
             ((Image)CurrentSkin.IdleBrush.Visual).Loaded += delegate { SetSpriteRatio(); };
+
+            _soundEffectCache = new SoundEffectCache();
         }
 
         public void AdjustSprite()
@@ -86,6 +89,14 @@ namespace Floppy_Plane_WPF.Controllers
         public void NextSprite() => SetCurrentSkinIndex((CurrentSkinIndex + 1) % Skins.Count);
 
         public void PrevSprite() => SetCurrentSkinIndex((CurrentSkinIndex + Skins.Count - 1) % Skins.Count);
+
+        public void StartSound() => _soundEffectCache.PlayCachedSoundEffect(SoundEffect.PlayerEngine);
+
+        public void PlayDeathSound() 
+        {
+            _soundEffectCache.StopSoundEffects();
+            _soundEffectCache.PlayCachedSoundEffect(SoundEffect.Explosion);
+        }
 
         private void SetCurrentSkinIndex(int spriteIndex)
         {

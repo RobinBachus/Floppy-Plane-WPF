@@ -6,8 +6,8 @@ A practice project for c#. Its a small Floppy Bird Like game made with WPF.
 - [ ] Add more settings
     - [x] Adjustable safe enemy spawn distance
     - [ ] Adjustable enemy spawn rate
-    - [ ] Adjustable gravity
-    - [ ] Fps counter toggle
+    - [x] Adjustable gravity
+    - [x] Fps counter toggle
     - [ ] (After sound effects) Adjustable volume
     - [ ] (optional) Adjustable player and enemy sizes
 - [ ] Add sound effects
@@ -16,11 +16,11 @@ A practice project for c#. Its a small Floppy Bird Like game made with WPF.
     - [ ] Add death sound
 - [x] Increase sprite quality
 - [ ] Add option to change skins
-    - [ ] Add selection screen
-    - [ ] Add skins
+    - [x] Add selection screen
+    - [x] Add skins
     - [ ] (optional) Add point system
-- [ ] Organize and comment code
-- [ ] Look for potential code optimizations
+- [ ] Organize and comment code (Ongoing)
+- [ ] Look for potential code optimizations (Ongoing)
 
 ## Resources
 
@@ -30,4 +30,4 @@ All images are copyright free
 - missile: https://www.flaticon.com/free-icon/rocket_3056287
 
 ## Special thanks
-[@Dennis](https://github.com/Madgamermlg) for making the assets look nice and crisp!
+[@Dennis](https://github.com/Madgamermlg) for making the different skins and making the assets look nice and crisp!
