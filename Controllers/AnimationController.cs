@@ -172,17 +172,13 @@ namespace Floppy_Plane_WPF.Controllers
         /// <returns>True if <paramref name="yPosition"/> is far enough from other enemies, else false</returns>
         private bool IsSafeDistance(int yPosition)
         {
-            for (var i = 1; i < 2; i++)
-            {
-                if (i > _enemies.Count) break;
-                var toTest = _enemies[^i];
-                double xDistance = _frame.ActualWidth - toTest.X;
-                double yDistance = yPosition - toTest.Y;
-                double distance = Math.Sqrt(Math.Pow(xDistance, 2) + Math.Pow(yDistance, 2));
-                if (distance < SafeDistance) return false;
-            }
+            if (_enemies.Count == 0) return true;
+            Enemy toTest = _enemies[^1];
+            double xDistance = _frame.ActualWidth - toTest.X;
+            double yDistance = yPosition - toTest.Y;
+            double distance = Math.Sqrt(Math.Pow(xDistance, 2) + Math.Pow(yDistance, 2));
 
-            return true;
+            return !(distance < SafeDistance);
         }
 
         private bool EnemyHit()

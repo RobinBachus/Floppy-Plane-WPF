@@ -3,38 +3,44 @@ using System;
 
 namespace Floppy_Plane_WPF.AudioUtils
 {
-    public class CachedSoundEffect : IDisposable
-    {
-        public WaveStream Stream { get; }
+	public class CachedSoundEffect : IDisposable
+	{
+		public WaveStream Stream { get; }
 
-        private bool _disposed;
+		private readonly IWavePlayer _waveOutDevice;
+		private bool _disposed;
 
-        public CachedSoundEffect(WaveStream stream)
-        {
-            Stream = stream;
-        }
+		public CachedSoundEffect(WaveStream stream)
+		{
+			Stream = stream;
+			_waveOutDevice = _waveOutDevice = new WaveOut();
+			_waveOutDevice.Init(Stream);
+		}
 
-        public void Play(IWavePlayer waveOutDevice)
-        {
-            // Play the cached audio
-            waveOutDevice.Init(Stream);
-            waveOutDevice.Play();
-        }
+		public void Play()
+		{
+			// Play the cached audio
+			_waveOutDevice.Play();
+		}
 
-        public void Dispose()
-        {
-            Dispose(true);
-            GC.SuppressFinalize(this);
-        }
+		protected virtual void Dispose(bool disposing)
+		{
+			if (_disposed) return;
+			
+			_waveOutDevice.Dispose();
+			Stream.Dispose();
+			_disposed = true;
+		}
 
-        protected virtual void Dispose(bool disposing)
-        {
-            if (_disposed) return;
-            
-            Stream.Dispose();
-            _disposed = true;
+		~CachedSoundEffect()
+		{
+			Dispose(disposing: false);
+		}
 
-            
-        }
-    }
+		public void Dispose()
+		{
+			Dispose(true);
+			GC.SuppressFinalize(this);
+		}
+	}
 }

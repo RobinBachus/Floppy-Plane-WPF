@@ -15,18 +15,19 @@ namespace Floppy_Plane_WPF.AudioUtils
             // Initialize the audio player (WaveOut or other options)
             _waveOutDevice = new WaveOut();
 
-            var bgmData = SoundEffectData.SoundEffectDataList[SoundEffect.Bgm];
+            SoundEffectData bgmData = SoundEffectData.SoundEffectDataList[SoundEffect.Bgm];
 
             _stream = new LoopStream(new AudioFileReader(bgmData.FilePath));
             _musicCache = new CachedSoundEffect(_stream);
 
             _waveOutDevice.Init(_stream);
+            _waveOutDevice.Volume = .5f;
         }
 
         public void Play()
         {
             _stream.EnableLooping = true;
-            _musicCache.Play(_waveOutDevice);
+            _musicCache.Play();
         }
 
         public void Stop()
