@@ -30,7 +30,7 @@ namespace Floppy_Plane_WPF
             MusicController = new MusicController();
             AnimationController = new AnimationController(Player, Frame, GameUi, GameOverScreen, Enemies, MusicController);
             SkinSelectionPage = new SkinSelection(this, Player.GraphicsController);
-            Settings.AddSettingEventHandlers(this, AnimationController, Player);
+            Settings.AddSettingEventHandlers(this, Player);
             GUI.Menu.AddMenuEventListeners(this, MusicController);
 
             MusicController.Play();

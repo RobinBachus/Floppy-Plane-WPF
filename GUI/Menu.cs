@@ -30,47 +30,45 @@ namespace Floppy_Plane_WPF.GUI
 
         private void SetMenuVisibility(Visibility visibility)
         {
-            if (visibility == Visibility.Visible)
-            {
-                _mainWindow.GameUi.Visibility = Visibility.Collapsed;
-            }
             _mainWindow.Menu.Visibility = visibility;
             _mainWindow.Frame.Visibility = visibility;
+
+            if (visibility != Visibility.Visible) return;
+
+            _mainWindow.GameUi.Visibility = Visibility.Collapsed;
+            _mainWindow.Frame.Focus();
+            _mainWindow.Player.SetToStartPosition();
         }
 
         private void SettingsButton_Clicked(object sender, MouseEventArgs e)
         {
-            SetMenuVisibility(Visibility.Collapsed);
             _mainWindow.SettingsWindow.Visibility = Visibility.Visible;
+            SetMenuVisibility(Visibility.Collapsed);
         }
 
         private void SettingsReturnButton_Clicked(object sender, MouseEventArgs e)
         {
-            SetMenuVisibility(Visibility.Visible);
             _mainWindow.SettingsWindow.Visibility = Visibility.Collapsed;
-            _mainWindow.Frame.Focus();
+            SetMenuVisibility(Visibility.Visible);
         }
 
         private void GameOverMenuButton_Click(object sender, RoutedEventArgs e)
         {
-            SetMenuVisibility(Visibility.Visible);
             _mainWindow.GameOverScreen.Visibility = Visibility.Collapsed;
-            _mainWindow.Frame.Focus();
-            _mainWindow.Player.SetToStartPosition();
+            SetMenuVisibility(Visibility.Visible);
             _musicController.Play();
         }
 
         private void SkinSelectionButton_Click(object sender, RoutedEventArgs e)
         {
-            SetMenuVisibility(Visibility.Collapsed);
             _mainWindow.SkinSelectionPage.Show();
+            SetMenuVisibility(Visibility.Collapsed);
         }
 
         private void SkinReturnButton_Click(object sender, RoutedEventArgs e)
         {
-            SetMenuVisibility(Visibility.Visible);
             _mainWindow.SkinSelectionPage.Hide();
-            _mainWindow.Frame.Focus();
+            SetMenuVisibility(Visibility.Visible);
         }
     }
 }

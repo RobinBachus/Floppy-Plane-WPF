@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Threading;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement.TaskbarClock;
 
 namespace Floppy_Plane_WPF.Controllers
 {
@@ -24,9 +25,15 @@ namespace Floppy_Plane_WPF.Controllers
 
         public bool Started { get; set; }
         public int Level { get; set; }
-        public int SpeedIncreaseValue { get; set; }
-        // public bool ShowHitBoxes { get; set; }
-        public int SafeDistance { get; set; }
+
+        public static int LevelUpTime
+        {
+            get => LevelTimer.Interval.Seconds;
+            set => LevelTimer.Interval = TimeSpan.FromSeconds(value);
+        }
+
+        public static int SpeedIncreaseValue { get; set; }
+        public static int SafeDistance { get; set; }
 
         /// <summary>
         /// Timer for the animations
@@ -41,7 +48,7 @@ namespace Floppy_Plane_WPF.Controllers
         /// <summary>
         /// Timer for increasing the level
         /// </summary>
-        private DispatcherTimer LevelTimer { get; }
+        private static DispatcherTimer LevelTimer { get; set; } = new();
 
         /// <summary>
         /// Allows for a short period of time between dying and being able to restart to avoid accidental restarts after dying
@@ -70,7 +77,6 @@ namespace Floppy_Plane_WPF.Controllers
             Started = false;
             Level = 1;
             SpeedIncreaseValue = 3;
-            // ShowHitBoxes = false;
             SafeDistance = 300;
 
             FrameUpdateTimer = new DispatcherTimer { Interval = TimeSpan.FromMilliseconds(20) };
@@ -192,11 +198,6 @@ namespace Floppy_Plane_WPF.Controllers
             Level = level;
             if (_ui.Children[1] is Label { Name: "LevelIndicator" } levelIndicator) levelIndicator.Content = $"{level}";
             else throw new Exception("Could not find level indicator label");
-        }
-
-        public void SetLevelUpTime(int time)
-        {
-            LevelTimer.Interval = TimeSpan.FromSeconds(time);
         }
     }
 }

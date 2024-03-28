@@ -15,7 +15,7 @@ namespace Floppy_Plane_WPF.GameObjects
 		public PlayerGraphicsController GraphicsController { get; }
 		public Canvas Frame { get; }
 
-		public double GravityMultiplier { get; set; }
+		public static double GravityMultiplier { get; set; }
 
 		public Rectangle Sprite => GraphicsController.Sprite;
 		public bool IsJumping => Speed < 0;

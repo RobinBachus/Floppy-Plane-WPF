@@ -7,16 +7,12 @@ namespace Floppy_Plane_WPF.GUI
 {
     internal class Settings
     {
-        public static int LevelTime { get; set; }
-        public static int Speed { get; set; }
-        public static int SafeDistance { get; set; }
-        public static double GravityStrength { get; set; }
         public static bool ShowHitBoxes { get; set; }
 
-        public static void AddSettingEventHandlers(MainWindow mainWindow, AnimationController animationController, Player player)
+        public static void AddSettingEventHandlers(MainWindow mainWindow, Player player)
         {
-            Sliders sliders = new(animationController, mainWindow, player);
-            CheckBoxes checkboxes = new(animationController, player, mainWindow);
+            Sliders sliders = new(mainWindow);
+            CheckBoxes checkboxes = new(player, mainWindow);
 
             mainWindow.LevelTimeSlider.ValueChanged += sliders.LevelTimeSlider_ValueChanged;
             mainWindow.SpeedSlider.ValueChanged += sliders.SpeedSlider_ValueChanged;
@@ -31,21 +27,17 @@ namespace Floppy_Plane_WPF.GUI
 
         private class Sliders
         {
-            private AnimationController AnimationController { get; }
             private MainWindow Window { get; }
-            private Player Player { get; }
 
-            public Sliders(AnimationController animationController, MainWindow mainWindow, Player player)
+            public Sliders(MainWindow mainWindow)
             {
-                AnimationController = animationController;
                 Window = mainWindow;
-                Player = player;
             }
 
             public void LevelTimeSlider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
             {
                 Window.LevelTimeValue.Content = $"{Convert.ToInt32(e.NewValue)} sec";
-                AnimationController.SetLevelUpTime(Convert.ToInt32(e.NewValue));
+                AnimationController.LevelUpTime = Convert.ToInt32(e.NewValue);
             }
 
             public void SpeedSlider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
@@ -71,13 +63,11 @@ namespace Floppy_Plane_WPF.GUI
 
         private class CheckBoxes
         {
-            private AnimationController AnimationController { get; set; }
-            private Player Player { get; set; }
-            private MainWindow Window { get; set; }
+            private Player Player { get; }
+            private MainWindow Window { get; }
 
-            public CheckBoxes(AnimationController animationController, Player player, MainWindow mainWindow)
+            public CheckBoxes(Player player, MainWindow mainWindow)
             {
-                AnimationController = animationController;
                 Player = player;
                 Window = mainWindow;
             }
@@ -90,7 +80,6 @@ namespace Floppy_Plane_WPF.GUI
             public void ShowHitBoxCheckBox_Click(object sender, RoutedEventArgs e)
             {
                 ShowHitBoxes = Window.ShowHitboxCheckbox.IsChecked ?? false;
-                Player.Draw();
             }
 
             public void DisplayFpsCheckBox_Click(object sender, RoutedEventArgs e)
