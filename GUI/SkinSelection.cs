@@ -47,7 +47,7 @@ namespace Floppy_Plane_WPF.GUI
 
         private void UpdateVisual()
         {
-            var brush = (VisualBrush)_graphicsController.Sprite.Fill;
+            VisualBrush? brush = (VisualBrush)_graphicsController.Sprite.Fill;
             SkinPreview.ImageSource = ((Image)brush.Visual).Source;
             _mainWindow.SkinNameLabel.Content = _graphicsController.CurrentSkinName;
         }

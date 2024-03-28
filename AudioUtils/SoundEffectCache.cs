@@ -15,14 +15,14 @@ namespace Floppy_Plane_WPF.AudioUtils
 			// Initialize the audio player (WaveOut or other options)
 			_waveOutDevice = new WaveOut();
 
-			foreach (var soundData in SoundEffectData.SoundEffectDataList) CacheSoundEffect(soundData.Value);
+			foreach (KeyValuePair<SoundEffect, SoundEffectData> soundData in SoundEffectData.SoundEffectDataList) CacheSoundEffect(soundData.Value);
 		}
 
 		public void CacheSoundEffect(SoundEffectData data)
 		{
 			if (_cache.ContainsKey(data.Effect)) return;
 			WaveStream stream;
-			var audioFile = new AudioFileReader(data.FilePath);
+			AudioFileReader audioFile = new AudioFileReader(data.FilePath);
 			if (data.IsLooped) stream = new LoopStream(audioFile);
 			else stream = audioFile;
 			_cache[data.Effect] = new CachedSoundEffect(stream);
@@ -30,14 +30,14 @@ namespace Floppy_Plane_WPF.AudioUtils
 
 		public void PlayCachedSoundEffect(SoundEffect soundEffect)
 		{
-			if (!_cache.TryGetValue(soundEffect, out var cachedSoundEffect)) return;
+			if (!_cache.TryGetValue(soundEffect, out CachedSoundEffect? cachedSoundEffect)) return;
 			cachedSoundEffect.Play();
 			ToggleLooping(cachedSoundEffect, true);
 		}
 
 		public void StopSoundEffects()
 		{
-			foreach (var soundEffect in _cache.Values)
+			foreach (CachedSoundEffect soundEffect in _cache.Values)
 				ToggleLooping(soundEffect, false);
 
 			_waveOutDevice.Stop();
@@ -62,7 +62,7 @@ namespace Floppy_Plane_WPF.AudioUtils
 			_waveOutDevice.Stop();
 			_waveOutDevice.Dispose();
 
-			foreach (var cachedSoundEffect in _cache.Values)
+			foreach (CachedSoundEffect cachedSoundEffect in _cache.Values)
 			{
 				cachedSoundEffect.Dispose();
 			}

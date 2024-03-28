@@ -7,6 +7,12 @@ namespace Floppy_Plane_WPF.GUI
 {
     internal class Settings
     {
+        public static int LevelTime { get; set; }
+        public static int Speed { get; set; }
+        public static int SafeDistance { get; set; }
+        public static double GravityStrength { get; set; }
+        public static bool ShowHitBoxes { get; set; }
+
         public static void AddSettingEventHandlers(MainWindow mainWindow, AnimationController animationController, Player player)
         {
             Sliders sliders = new(animationController, mainWindow, player);
@@ -83,8 +89,7 @@ namespace Floppy_Plane_WPF.GUI
 
             public void ShowHitBoxCheckBox_Click(object sender, RoutedEventArgs e)
             {
-                AnimationController.ShowHitBoxes = Window.ShowHitboxCheckbox.IsChecked ?? false;
-                Player.ShowHitBoxes = Window.ShowHitboxCheckbox.IsChecked ?? false;
+                ShowHitBoxes = Window.ShowHitboxCheckbox.IsChecked ?? false;
                 Player.Draw();
             }
 
@@ -97,7 +102,7 @@ namespace Floppy_Plane_WPF.GUI
 
         private static void ToggleVisibility(UIElement element, bool? isChecked = false)
         {
-            var visibility = isChecked ?? false ? Visibility.Visible : Visibility.Collapsed;
+            Visibility visibility = isChecked ?? false ? Visibility.Visible : Visibility.Collapsed;
             element.Visibility = visibility;
         }
     }

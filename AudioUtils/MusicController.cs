@@ -27,13 +27,13 @@ namespace Floppy_Plane_WPF.AudioUtils
         public void Play()
         {
             _stream.EnableLooping = true;
-            _musicCache.Play();
+            //_musicCache.Play();
         }
 
         public void Stop()
         {
             _stream.EnableLooping = false;
-            _waveOutDevice.Stop();
+            //_waveOutDevice.Stop();
         }
 
         protected virtual void Dispose(bool disposing)

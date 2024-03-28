@@ -20,14 +20,12 @@ namespace Floppy_Plane_WPF.Controllers
         private readonly Random _random;
         private readonly MusicController _musicController;
 
-        private int EnemyCount { get; set; }
-
         public bool CanReSpawn { get; private set; }
 
         public bool Started { get; set; }
         public int Level { get; set; }
         public int SpeedIncreaseValue { get; set; }
-        public bool ShowHitBoxes { get; set; }
+        // public bool ShowHitBoxes { get; set; }
         public int SafeDistance { get; set; }
 
         /// <summary>
@@ -72,7 +70,7 @@ namespace Floppy_Plane_WPF.Controllers
             Started = false;
             Level = 1;
             SpeedIncreaseValue = 3;
-            ShowHitBoxes = false;
+            // ShowHitBoxes = false;
             SafeDistance = 300;
 
             FrameUpdateTimer = new DispatcherTimer { Interval = TimeSpan.FromMilliseconds(20) };
@@ -106,10 +104,10 @@ namespace Floppy_Plane_WPF.Controllers
         {
             _player.MovePlayer();
             // Move enemies and check if any have left the screen
-            var toRemove = _enemies.FindAll(enemy =>
+            List<Enemy>? toRemove = _enemies.FindAll(enemy =>
             {
                 enemy.Move();
-                return enemy.X <= 0 + 25 - Enemy.BaseWidth;
+                return enemy.X <= 25 - Enemy.BaseWidth;
             });
 
             // Remove the enemies that have left the screen
@@ -127,7 +125,7 @@ namespace Floppy_Plane_WPF.Controllers
             if (_random.Next(25) != 10 && _enemies.Count != 0) return;
             int yPos = _random.Next((int)(_frame.ActualHeight - Enemy.BaseHeight));
             if (!IsSafeDistance(yPos)) return;
-            Invoke(() => _enemies.Add(new Enemy(_frame, ++EnemyCount, yPos, Level, SpeedIncreaseValue, ShowHitBoxes)));
+            Invoke(() => _enemies.Add(new Enemy(_frame, yPos, Level, SpeedIncreaseValue)));
         }
 
         private void Timer_CheckCollision()

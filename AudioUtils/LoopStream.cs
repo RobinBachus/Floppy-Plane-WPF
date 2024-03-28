@@ -52,7 +52,7 @@ namespace Floppy_Plane_WPF.AudioUtils
 
         public override int Read(byte[] buffer, int offset, int count)
         {
-            var totalBytesRead = 0;
+            int totalBytesRead = 0;
 
             while (totalBytesRead < count)
             {

@@ -5,6 +5,7 @@ using System.Windows.Controls;
 using System.Windows.Media;
 using System.Windows.Shapes;
 using Floppy_Plane_WPF.AudioUtils;
+using Floppy_Plane_WPF.GUI;
 
 namespace Floppy_Plane_WPF.Controllers
 {
@@ -14,16 +15,17 @@ namespace Floppy_Plane_WPF.Controllers
         public RotateTransform Rotation { get; } = new(0);
         public string CurrentSkinName => CurrentSkin.Name;
 
-        private bool _showHitboxes;
-        public bool ShowHitBoxes
-        {
-            get => _showHitboxes;
-            set
-            {
-                Sprite.Stroke = value ? Brushes.Green : null;
-                _showHitboxes = value;
-            }
-        }
+        // Use Settings.ShowHitBoxes instead
+        //private bool _showHitboxes;
+        //public bool ShowHitBoxes
+        //{
+        //    get => _showHitboxes;
+        //    set
+        //    {
+        //        Sprite.Stroke = value ? Brushes.Green : null;
+        //        _showHitboxes = value;
+        //    }
+        //}
 
         private readonly Player _player;
         private readonly SoundEffectCache _soundEffectCache;
@@ -41,7 +43,7 @@ namespace Floppy_Plane_WPF.Controllers
             _player = player;
             string[] skinPaths = Directory.GetDirectories(@"Resources\PlayerSkins\");
 
-            var i = 0;
+            int i = 0;
             foreach (string skinPath in skinPaths)
             {
                 Skin skin = new(skinPath);
@@ -107,8 +109,8 @@ namespace Floppy_Plane_WPF.Controllers
 
         private void SetSpriteRatio()
         {
-            var sprite = (VisualBrush)Sprite.Fill;
-            var image = (Image)sprite.Visual;
+            VisualBrush? sprite = (VisualBrush)Sprite.Fill;
+            Image? image = (Image)sprite.Visual;
             double ratio = image.ActualHeight / image.ActualWidth;
             Sprite.Height = Sprite.Width * ratio;
         }

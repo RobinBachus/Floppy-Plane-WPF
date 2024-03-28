@@ -3,6 +3,7 @@ using System;
 using System.Windows.Controls;
 using System.Windows.Media;
 using System.Windows.Shapes;
+using Floppy_Plane_WPF.GUI;
 
 namespace Floppy_Plane_WPF.GameObjects
 {
@@ -19,11 +20,11 @@ namespace Floppy_Plane_WPF.GameObjects
 		public Rectangle Sprite => GraphicsController.Sprite;
 		public bool IsJumping => Speed < 0;
 
-		public bool ShowHitBoxes 
-		{
-			get => GraphicsController.ShowHitBoxes; 
-			set => GraphicsController.ShowHitBoxes = value;
-		}
+		//public bool ShowHitBoxes 
+		//{
+		//	get => GraphicsController.ShowHitBoxes; 
+		//	set => GraphicsController.ShowHitBoxes = value;
+		//}
 
 		private RotateTransform Rotation => GraphicsController.Rotation;
 
@@ -41,7 +42,6 @@ namespace Floppy_Plane_WPF.GameObjects
 			Speed = 1;
 
 			GraphicsController = new PlayerGraphicsController(this);
-			ShowHitBoxes = false;
 			GravityMultiplier = 1;
 		}
 
@@ -50,6 +50,9 @@ namespace Floppy_Plane_WPF.GameObjects
 			if (!Frame.Children.Contains(Sprite)) Frame.Children.Add(Sprite);
 			Canvas.SetLeft(Sprite, X);
 			Canvas.SetTop(Sprite, Y);
+
+			Sprite.Stroke = Settings.ShowHitBoxes ? Brushes.Green : null;
+
 			Frame.Focus();
 		}
 

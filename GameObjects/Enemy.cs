@@ -1,8 +1,10 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Windows.Controls;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
+using Floppy_Plane_WPF.GUI;
 
 namespace Floppy_Plane_WPF.GameObjects
 {
@@ -15,6 +17,9 @@ namespace Floppy_Plane_WPF.GameObjects
         public int Y { get; }
         public int Level { get; }
 
+        private static byte _id = 0;
+        private static byte NextId => _id = (byte)((_id + 1) % 256);
+
         public const int BaseSpeed = 10;
         public const int BaseHeight = 40;
         public const int BaseWidth = 70;
@@ -24,7 +29,7 @@ namespace Floppy_Plane_WPF.GameObjects
 
         private const string TEXTURE_PATH = @"Resources\missile.png";
 
-        public Enemy(Canvas canvas, int id, int yPosition, int level, int speedIncreaseValue, bool showHitBox)
+        public Enemy(Canvas canvas, int yPosition, int level, int speedIncreaseValue)
         {
             VisualBrush visualBrush = new();
 
@@ -39,13 +44,13 @@ namespace Floppy_Plane_WPF.GameObjects
             Frame = canvas;
             Sprite = new Rectangle
             {
-                Name = $"Enemy{id}",
+                Name = $"Enemy{NextId}",
                 Height = BaseHeight,
                 Width = BaseWidth,
                 Fill = visualBrush,
             };
 
-            if (showHitBox) Sprite.Stroke = Brushes.Red;
+            if (Settings.ShowHitBoxes) Sprite.Stroke = Brushes.Red;
 
             X = (int)Frame.ActualWidth;
             Y = yPosition;
