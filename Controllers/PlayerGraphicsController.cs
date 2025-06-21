@@ -29,7 +29,7 @@ namespace Floppy_Plane_WPF.Controllers
 
         private readonly Player _player;
         private readonly SoundEffectCache _soundEffectCache;
-        private List<Skin> Skins { get; } = new();
+        private List<Skin> Skins { get; } = [];
         private int CurrentSkinIndex { get; set; }
         private bool HasJumpSkin { get; set; }
 
@@ -49,7 +49,7 @@ namespace Floppy_Plane_WPF.Controllers
                 Skin skin = new(skinPath);
                 Skins.Add(skin);
 
-                if (skin.Name.ToLower() == "default") CurrentSkinIndex = i;
+                if (skin.Name.Equals("default", System.StringComparison.CurrentCultureIgnoreCase)) CurrentSkinIndex = i;
                 i++;
             }
 
